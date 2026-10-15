@@ -15,15 +15,40 @@ jobs:
           cache: true
       - name: Generate Android folder
         run: flutter create . --platforms=android --project-name arjun_mastermind
-      - name: Copy google-services.json if exists
+      - name: Copy or Create google-services.json
         run: |
           if [ -f google-services.json ]; then
             cp google-services.json android/app/
             echo "Firebase config copied!"
+          else
+            echo "Creating dummy google-services.json for build..."
+            cat > android/app/google-services.json << 'EOF'
+          {
+            "project_info": {
+              "project_number": "000000000000",
+              "project_id": "arjun-mastermind-dummy",
+              "storage_bucket": "arjun-mastermind-dummy.appspot.com"
+            },
+            "client": [
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
+                  "android_client_info": {
+                    "package_name": "com.example.arjun_mastermind"
+                  }
+                },
+                "oauth_client": [],
+                "api_key": [{ "current_key": "AIzaSyDummyKey-0000000000000000000000" }],
+                "services": { "appinvite_service": { "other_platform_oauth_client": [] } }
+              }
+            ],
+            "configuration_version": "1"
+          }
+          EOF
           fi
       - run: flutter pub get
       - run: flutter build apk --release
       - uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: build/app/outputs/flutter-apk/app-release.
+          path: build/app/outputs/flutter-apk/app-release.apk
