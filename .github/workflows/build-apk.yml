@@ -19,6 +19,27 @@ jobs:
       - name: Generate Android folder
         run: flutter create . --platforms=android --project-name arjun_mastermind
       
+      - name: Fix Android Desugaring for flutter_local_notifications
+        run: |
+          FILE="android/app/build.gradle"
+          if [ ! -f "$FILE" ]; then
+            FILE="android/app/build.gradle.kts"
+          fi
+          echo "Patching $FILE..."
+          # Add desugar lib dependency if not present
+          if ! grep -q "desugar_jdk_libs" "$FILE"; then
+            sed -i '/^dependencies {/a \    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")' "$FILE"
+            # For kts file syntax is slightly different but this works for both with gradle parser fallback
+            if grep -q "\.kts" <<< "$FILE"; then
+              sed -i 's/coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")/coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")/' "$FILE"
+            fi
+          fi
+          # Enable coreLibraryDesugaringEnabled
+          if ! grep -q "isCoreLibraryDesugaringEnabled" "$FILE"; then
+            sed -i '/compileOptions {/a \        isCoreLibraryDesugaringEnabled = true' "$FILE"
+          fi
+          cat "$FILE"
+      
       - name: Copy or Create google-services.json
         run: |
           if [ -f google-services.json ]; then
