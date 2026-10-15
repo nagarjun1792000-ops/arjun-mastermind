@@ -1,7 +1,7 @@
-name: namma_ooru_app
-description: Namma Ooru App - Tamil all-in-one super app.
+name: arjun_mastermind
+description: Arjun Mastermind - All-in-one smart super app.
 publish_to: "none"
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  firebase_core: ^2.24.2
+  firebase_messaging: ^14.8.0
+  flutter_local_notifications: ^16.3.0
 
 dev_dependencies:
   flutter_test:
