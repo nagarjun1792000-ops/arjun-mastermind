@@ -1,3 +1,4 @@
+
 name: Build APK
 on: [push, workflow_dispatch]
 jobs:
@@ -14,10 +15,16 @@ jobs:
           channel: 'stable'
           cache: true
       - name: Generate Android folder
-        run: flutter create . --platforms=android --project-name namma_ooru_app
+        run: flutter create . --platforms=android --project-name arjun_mastermind
+      - name: Copy google-services.json if exists
+        run: |
+          if [ -f google-services.json ]; then
+            cp google-services.json android/app/
+            echo "Firebase config copied!"
+          fi
       - run: flutter pub get
       - run: flutter build apk --release
       - uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.
