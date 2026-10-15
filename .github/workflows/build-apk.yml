@@ -5,16 +5,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      
+      - uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '17'
+      
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
+      
       - name: Generate Android folder
         run: flutter create . --platforms=android --project-name arjun_mastermind
+      
       - name: Copy or Create google-services.json
         run: |
           if [ -f google-services.json ]; then
@@ -22,6 +26,7 @@ jobs:
             echo "Firebase config copied!"
           else
             echo "Creating dummy google-services.json for build..."
+            mkdir -p android/app
             cat > android/app/google-services.json << 'EOF'
           {
             "project_info": {
@@ -46,8 +51,10 @@ jobs:
           }
           EOF
           fi
+      
       - run: flutter pub get
       - run: flutter build apk --release
+      
       - uses: actions/upload-artifact@v4
         with:
           name: app-release
