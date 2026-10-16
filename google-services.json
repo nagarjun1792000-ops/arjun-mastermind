@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "459292482260",
+    "project_id": "arjun-mastermind",
+    "storage_bucket": "arjun-mastermind.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:459292482260:android:4d6a573de6761afee37941",
+        "android_client_info": {
+          "package_name": "com.example.arjun_mastermind"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLRTiiTbTV96M68yOoNsadUhKOe2hCAlU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
