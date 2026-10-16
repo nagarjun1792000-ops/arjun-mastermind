@@ -1,4 +1,4 @@
-# Namma Ooru App
+# Arjun Mastermind
 
 A Tamil-first Flutter all-in-one super app with nine feature areas:
 
