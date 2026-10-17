@@ -1,154 +1,110 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  try {
-    await Firebase.initializeApp();
-  } catch (_) {}
-  print('Background Message: ${message.messageId}');
-}
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // Firebase safe init - google-services.json illana kooda app crash aagathu
-  try {
-    await Firebase.initializeApp();
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-    final messaging = FirebaseMessaging.instance;
-    await messaging.requestPermission(alert: true, badge: true, sound: true);
-
-    String? token = await messaging.getToken();
-    print('FCM Token: $token');
-
-    // Foreground notification setup
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    const InitializationSettings initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      if (message.notification!= null) {
-        flutterLocalNotificationsPlugin.show(
-          message.notification.hashCode,
-          message.notification!.title,
-          message.notification!.body,
-          const NotificationDetails(
-            android: AndroidNotificationDetails(
-              'arjun_mastermind_channel',
-              'Arjun Mastermind Notifications',
-              importance: Importance.max,
-              priority: Priority.high,
-            ),
-          ),
-        );
-      }
-    });
-  } catch (e) {
-    print('Firebase not configured yet: $e');
-  }
-
-  runApp(const ArjunMastermindApp());
-}
+void main() => runApp(ArjunMastermindApp());
 
 class ArjunMastermindApp extends StatelessWidget {
-  const ArjunMastermindApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Arjun Mastermind',
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-        useMaterial3: true,
-      ),
-      home: const HomeScreen(),
+      theme: ThemeData(primarySwatch: Colors.deepPurple),
+      home: HomePage(),
     );
   }
 }
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  final List<Map<String, dynamic>> services = const [
-    {'icon': '🎮', 'title': 'விளையாட்டுகள்', 'subtitle': 'Games'},
-    {'icon': '🍔', 'title': 'உணவு ஆர்டர்', 'subtitle': 'Food Order'},
-    {'icon': '👕', 'title': 'உடை ஆர்டர்', 'subtitle': 'Dress Order'},
-    {'icon': '💼', 'title': 'வேலைவாய்ப்புகள்', 'subtitle': 'Jobs'},
-    {'icon': '🎬', 'title': 'திரைப்படங்கள்', 'subtitle': 'Movies'},
-    {'icon': '🚌', 'title': 'பயண டிக்கெட்', 'subtitle': 'Travel'},
-    {'icon': '🔔', 'title': 'அறிவிப்புகள்', 'subtitle': 'Notifications'},
-    {'icon': '🧠', 'title': 'Mastermind', 'subtitle': 'Arjun Special'},
-    {'icon': '⭐', 'title': 'மேலும்', 'subtitle': 'More'},
+class HomePage extends StatelessWidget {
+  final List<Map<String, String>> items = [
+    {'ta': 'விளையாட்டுகள்', 'en': 'Games', 'icon': '🎮'},
+    {'ta': 'உணவு ஆர்டர்', 'en': 'Food Order', 'icon': '🍔'},
+    {'ta': 'உடை ஆர்டர்', 'en': 'Dress Order', 'icon': '👕'},
+    {'ta': 'வேலைவாய்ப்புகள்', 'en': 'Jobs', 'icon': '💼'},
+    {'ta': 'திரைப்படங்கள்', 'en': 'Movies', 'icon': '🎬'},
+    {'ta': 'பயண டிக்கெட்', 'en': 'Travel', 'icon': '🚌'},
+    {'ta': 'அறிவிப்புகள்', 'en': 'Notifications', 'icon': '🔔'},
+    {'ta': 'Mastermind', 'en': 'Arjun Special', 'icon': '🧠'},
+    {'ta': 'மேலும்', 'en': 'More', 'icon': '⭐'},
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('ARJUN MASTERMIND', style: TextStyle(fontWeight: FontWeight.bold)),
-        centerTitle: true,
-        backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,
-      ),
+      backgroundColor: Color(0xFFFAF5FF),
       body: Column(
         children: [
           Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(20),
-            decoration: const BoxDecoration(
-              color: Colors.deepPurple,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-              ),
+            padding: EdgeInsets.fromLTRB(20, 60, 20, 40),
+            decoration: BoxDecoration(
+              color: Color(0xFF7C3AED),
+              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(40), bottomRight: Radius.circular(40)),
             ),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('வணக்கம்! 👋', style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
+                Center(child: Text('ARJUN MASTERMIND', style: TextStyle(color: Colors.white, fontSize: 22, letterSpacing: 1))),
+                SizedBox(height: 25),
+                Text('வணக்கம்! 👋', style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold)),
                 SizedBox(height: 5),
                 Text('Arjun Mastermind ku varuga!', style: TextStyle(color: Colors.white70, fontSize: 16)),
               ],
             ),
           ),
-          const SizedBox(height: 20),
           Expanded(
             child: GridView.builder(
-              padding: const EdgeInsets.all(15),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 0.9,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-              ),
-              itemCount: services.length,
-              itemBuilder: (context, index) {
-                final service = services[index];
-                return Card(
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(service['icon'], style: const TextStyle(fontSize: 32)),
-                      const SizedBox(height: 8),
-                      Text(service['title'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12), textAlign: TextAlign.center),
-                      Text(service['subtitle'], style: const TextStyle(fontSize: 10, color: Colors.grey)),
-                    ],
+              padding: EdgeInsets.all(16),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.85, crossAxisSpacing: 12, mainAxisSpacing: 12),
+              itemCount: items.length,
+              itemBuilder: (ctx, i) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => DetailPage(title: items[i]['ta']!, subtitle: items[i]['en']!)));
+                  },
+                  child: Card(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    elevation: 3,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(items[i]['icon']!, style: TextStyle(fontSize: 40)),
+                        SizedBox(height: 8),
+                        Text(items[i]['ta']!, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                        Text(items[i]['en']!, style: TextStyle(color: Colors.grey, fontSize: 11)),
+                      ],
+                    ),
                   ),
                 );
               },
             ),
-          ),
+          )
         ],
+      ),
+    );
+  }
+}
+
+class DetailPage extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  DetailPage({required this.title, required this.subtitle});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(title), backgroundColor: Color(0xFF7C3AED)),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('🚀', style: TextStyle(fontSize: 80)),
+            SizedBox(height: 20),
+            Text(title, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            Text(subtitle, style: TextStyle(color: Colors.grey)),
+            SizedBox(height: 20),
+            Text('Intha page la un content varum da Nagarjun!', style: TextStyle(fontSize: 16)),
+            SizedBox(height: 20),
+            ElevatedButton(onPressed: () => Navigator.pop(context), child: Text('Back Poga')),
+          ],
+        ),
       ),
     );
   }
