@@ -1,5 +1,8 @@
-import 'package:flutter/material.dart';                                                                                                                                                                                                                                                    import 'package:flutter/material.dar
+                                                                                                          
+import 'package:flutter/material.dart';
+
 void main() => runApp(ArjunMastermindApp());
+
 class ArjunMastermindApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -296,4 +299,4 @@ class SpecialPage extends StatelessWidget {
       ),
     );
   }
-}                                                                                                                       
+}
