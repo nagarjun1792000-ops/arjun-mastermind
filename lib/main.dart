@@ -46,7 +46,7 @@ class HomePage extends StatelessWidget {
                 homeCard(context, 'Games', Icons.sports_esports, GamesHubPage()),
                 homeCard(context, 'Food', Icons.fastfood, FoodHubPage()),
                 homeCard(context, 'Movies', Icons.movie, MovieNowShowingPage()),
-                homeCard(context, 'Jobs', Icons.work, DetailPage(title: 'Jobs')),
+                homeCard(context, 'Jobs', Icons.work, JobsHubPage()),
                 homeCard(context, 'Travel', Icons.directions_bus, DetailPage(title: 'Travel')),
                 homeCard(context, 'Dress', Icons.checkroom, DetailPage(title: 'Dress')),
               ],
@@ -82,7 +82,7 @@ class DetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(title)),
-      body: Center(child: Text('$title Coming Soon')),
+      body: Center(child: Text('$title Coming Soon da!')),
     );
   }
 }
@@ -90,14 +90,14 @@ class DetailPage extends StatelessWidget {
 class GamesHubPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text('Games')), body: Center(child: Text('Games')));
+    return Scaffold(appBar: AppBar(title: Text('Games')), body: Center(child: Text('Games Coming Soon')));
   }
 }
 
 class FoodHubPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text('Food')), body: Center(child: Text('Food')));
+    return Scaffold(appBar: AppBar(title: Text('Food Order')), body: Center(child: Text('Food Module Coming')));
   }
 }
 
@@ -109,11 +109,7 @@ class MovieNowShowingPage extends StatefulWidget {
 class MovieNowShowingPageState extends State<MovieNowShowingPage> {
   String district = 'Coimbatore';
   String filter = 'Tamil';
-
-  List<String> districts = [
-    'Chennai','Coimbatore','Madurai','Salem','Trichy','Tirunelveli','Thanjavur','Vellore','Erode','Tiruppur'
-  ];
-
+  List<String> districts = ['Chennai','Coimbatore','Madurai','Salem','Trichy','Tirunelveli','Thanjavur','Vellore','Erode','Tiruppur'];
   List<Map<String, dynamic>> movies = [
     {'title': 'Jailer 2', 'sub': '367K+ likes', 'lang': 'Tamil', 'col': Colors.brown},
     {'title': 'Street Fighter', 'sub': '7.3  3.6K+ votes', 'lang': 'English', 'col': Colors.red},
@@ -124,13 +120,11 @@ class MovieNowShowingPageState extends State<MovieNowShowingPage> {
     {'title': 'Avatar 3', 'sub': '8.8  22K+ votes', 'lang': 'English', 'col': Colors.teal},
     {'title': 'Jawan 2', 'sub': '290K+ likes', 'lang': 'Hindi', 'col': Colors.deepOrange},
   ];
-
   List<Map<String, dynamic>> get filtered {
     if (filter == 'All') return movies;
     if (filter == 'New Releases') return movies;
     return movies.where((m) => m['lang'] == filter).toList();
   }
-
   Widget chip(String label) {
     bool sel = filter == label;
     return Container(
@@ -143,7 +137,6 @@ class MovieNowShowingPageState extends State<MovieNowShowingPage> {
       ),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -174,15 +167,7 @@ class MovieNowShowingPageState extends State<MovieNowShowingPage> {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.all(8),
-            child: Row(
-              children: [
-                chip('All'),
-                chip('New Releases'),
-                chip('Tamil'),
-                chip('English'),
-                chip('Hindi'),
-              ],
-            ),
+            child: Row(children: [chip('All'), chip('New Releases'), chip('Tamil'), chip('English'), chip('Hindi')]),
           ),
           Expanded(
             child: GridView.builder(
@@ -196,11 +181,7 @@ class MovieNowShowingPageState extends State<MovieNowShowingPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        height: 200,
-                        decoration: BoxDecoration(color: m['col'], borderRadius: BorderRadius.circular(12)),
-                        child: Center(child: Text(m['title'], style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20))),
-                      ),
+                      Container(height: 200, decoration: BoxDecoration(color: m['col'], borderRadius: BorderRadius.circular(12)), child: Center(child: Text(m['title'], style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)))),
                       SizedBox(height: 6),
                       Text(m['sub'], style: TextStyle(fontSize: 11, color: Colors.grey)),
                       Text(m['title'], style: TextStyle(fontWeight: FontWeight.bold)),
@@ -236,41 +217,27 @@ class SeatPageState extends State<SeatPage> {
   List<String> sel = [];
   Set<String> sold = {'A8','A7','B6','B7','C6','C7','H8','H9','I9','J12','K10','N9'};
   Set<String> best = {'C16','J8','J9'};
-
   Widget seat(String k) {
     bool isSold = sold.contains(k);
     bool isSel = sel.contains(k);
     bool isBest = best.contains(k);
-    Color bg;
-    Color br;
+    Color bg; Color br;
     if (isSold) { bg = Colors.grey.shade300; br = Colors.grey.shade300; }
     else if (isSel) { bg = Color(0xFF16A34A); br = Color(0xFF16A34A); }
     else if (isBest) { bg = Colors.amber.shade100; br = Colors.amber; }
     else { bg = Colors.white; br = Colors.green; }
-
     return GestureDetector(
       onTap: isSold ? null : () => setState(() { if (isSel) sel.remove(k); else sel.add(k); }),
       child: Container(
-        width: 28,
-        height: 24,
-        margin: EdgeInsets.all(2),
+        width: 28, height: 24, margin: EdgeInsets.all(2),
         decoration: BoxDecoration(color: bg, border: Border.all(color: br), borderRadius: BorderRadius.circular(3)),
         child: Center(child: Text(k.replaceAll(RegExp(r'[A-Z]'), ''), style: TextStyle(fontSize: 9, color: isSel ? Colors.white : Colors.black))),
       ),
     );
   }
-
   Widget rowSeats(String r, List<int> left, List<int> right) {
-    return Row(
-      children: [
-        SizedBox(width: 24, child: Text(r, style: TextStyle(fontSize: 11, color: Colors.grey))),
-        ...left.map((n) => seat('$r$n')).toList(),
-        SizedBox(width: 20),
-        ...right.map((n) => seat('$r$n')).toList(),
-      ],
-    );
+    return Row(children: [SizedBox(width: 24, child: Text(r, style: TextStyle(fontSize: 11, color: Colors.grey))), ...left.map((n) => seat('$r$n')).toList(), SizedBox(width: 20), ...right.map((n) => seat('$r$n')).toList()]);
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -278,102 +245,5 @@ class SeatPageState extends State<SeatPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.movie['title'], style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
-            Text('Jayanthi Cinemas A/C 4K LASER ATMOS: P.N Palayam', style: TextStyle(color: Colors.grey, fontSize: 10)),
-          ],
-        ),
+        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(widget.movie['title'], style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)), Text('Jayanthi Cinemas A/C 4K LASER ATMOS: P.N Palayam', style: TextStyle(color: Colors.grey, fontSize: 10))]),
       ),
-      body: Column(
-        children: [
-          Container(
-            color: Color(0xFFF5F5F5),
-            padding: EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Wed, 21 Oct'),
-                Text('2 Tickets', style: TextStyle(color: Color(0xFFFF2C5A))),
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(10),
-            child: Row(
-              children: [
-                timeBox('06:15 PM'),
-                SizedBox(width: 10),
-                timeBox('09:45 PM'),
-              ],
-            ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: 10),
-                    Row(children: [SizedBox(width: 24, child: Text('PA', style: TextStyle(fontSize: 11))), seat('PA8'), seat('PA7'), SizedBox(width: 20), seat('PA15'), seat('PA14')]),
-                    Divider(),
-                    ...List.generate(14, (i) {
-                      String r = String.fromCharCode(65 + i);
-                      return Padding(padding: EdgeInsets.only(bottom: 4), child: rowSeats(r, [6,7], [8,9,10,11,12,13,14,15,16]));
-                    }),
-                    SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        leg(Colors.amber.shade100, 'Bestseller'),
-                        SizedBox(width: 12),
-                        leg(Colors.white, 'Available'),
-                        SizedBox(width: 12),
-                        leg(Colors.green, 'Selected'),
-                        SizedBox(width: 12),
-                        leg(Colors.grey.shade300, 'Sold'),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          if (sel.isNotEmpty)
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(12),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Color(0xFFFF2C5A), padding: EdgeInsets.all(14)),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Booked ${sel.join(",")} in ${widget.district}')));
-                  Navigator.pop(context);
-                },
-                child: Text('Pay Rs.${sel.length * 180} - ${sel.length} Tickets', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget timeBox(String t) {
-    bool s = time == t;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => setState(() => time = t),
-        child: Container(
-          padding: EdgeInsets.all(12),
-          decoration: BoxDecoration(color: s ? Color(0xFF16A34A) : Colors.white, border: Border.all(color: s ? Color(0xFF16A34A) : Colors.orange, width: 2), borderRadius: BorderRadius.circular(6)),
-          child: Column(children: [Text(t, style: TextStyle(fontWeight: FontWeight.bold, color: s ? Colors.white : Colors.black)), Text('4K LASER ATMOS', style: TextStyle(fontSize: 9, color: s ? Colors.white70 : Colors.grey))]),
-        ),
-      ),
-    );
-  }
-
-  Widget leg(Color c, String l) {
-    return Row(children: [Container(width: 14, height: 12, decoration: BoxDecoration(color: c, border: Border.all(color: c == Colors.white ? Colors.green : c))), SizedBox(width: 4), Text(l, style: TextStyle(fontSize: 10))]);
-  }
-}                
