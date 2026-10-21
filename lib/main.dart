@@ -31,7 +31,6 @@ class _MemoryPageState extends State<MemoryPage> { List<int> nums = [1,1,2,2,3,3
 class QuizPage extends StatefulWidget { @override State<QuizPage> createState() => _QuizPageState(); }
 class _QuizPageState extends State<QuizPage> { int q=0, score=0; List<Map<String,dynamic>> list = [{'q':'Tamil Nadu capital enna?','o':['Chennai','Madurai','Trichy'],'a':0},{'q':'Arjun creator yaaru?','o':['Nagarjun','Rajini','Kamal'],'a':0},{'q':'Flutter by?','o':['Google','Meta','Apple'],'a':0}]; @override Widget build(BuildContext context){ if(q>=list.length) return Scaffold(appBar: AppBar(title: Text('Result')), body: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Score $score/${list.length}', style: TextStyle(fontSize:28, fontWeight: FontWeight.bold)), ElevatedButton(onPressed: ()=> setState((){q=0;score=0;}), child: Text('Again'))]))); return Scaffold(appBar: AppBar(title: Text('Quiz ${q+1}/${list.length}')), body: Padding(padding: EdgeInsets.all(20), child: Column(children: [Text(list[q]['q'] as String, style: TextStyle(fontSize:22, fontWeight: FontWeight.bold)), SizedBox(height:20), ...List.generate(3, (i)=> Card(child: ListTile(title: Text(list[q]['o'][i] as String), onTap: (){ if(i==list[q]['a']) score++; setState(()=> q++); }))) ]))); } }
 
-// ============ 5 PLATFORMS + 38 DISTRICTS ============
 class FoodHubPage extends StatefulWidget { @override State<FoodHubPage> createState() => _FoodHubPageState(); }
 class _FoodHubPageState extends State<FoodHubPage> {
   String selectedDistrict = 'Chennai';
@@ -43,7 +42,7 @@ class _FoodHubPageState extends State<FoodHubPage> {
       {'name':'Mutton Biryani','price':350,'icon':Icons.rice_bowl,'time':'35 mins','shop':'Thalappakatti'},
       {'name':'Parotta Set','price':120,'icon':Icons.bakery_dining,'time':'20 mins','shop':'Burma Kadai'},
       {'name':'Meals','price':150,'icon':Icons.restaurant,'time':'25 mins','shop':'Sangeethas'},
-      {'name':'Pizza','price':299,'icon':Icons.local_pizza,'time':'30 mins','shop':'Domino\'s'},
+      {'name':'Pizza','price':299,'icon':Icons.local_pizza,'time':'30 mins','shop':'Dominos'},
       {'name':'Dosa','price':80,'icon':Icons.lunch_dining,'time':'15 mins','shop':'Murugan Idli'},
     ],
     'Zomato': [
@@ -79,36 +78,71 @@ class _FoodHubPageState extends State<FoodHubPage> {
       {'name':'Fruits Combo','price':299,'icon':Icons.apple,'time':'2 hrs','shop':'BigBasket Fresh'},
     ],
   };
-  Map<String, Color> pColors = {'Swiggy': Colors.orange, 'Zomato': Color(0xFFE23744), 'Zepto': Color(0xFF8B3CF7), 'Blinkit': Color(0xFFFACC15), 'BigBasket': Color(0xFF84CC16)};
-  Map<String, IconData> pIcons = {'Swiggy': Icons.delivery_dining, 'Zomato': Icons.restaurant, 'Zepto': Icons.bolt, 'Blinkit': Icons.flash_on, 'BigBasket': Icons.shopping_cart};
 
   List<Map<String,dynamic>> cart = [];
-  int get total => cart.fold(0, (s,e)=> s + (e['price'] as int));
-  Color get platformColor => pColors[selectedPlatform]!;
+  int get total {
+    int sum = 0;
+    for (var e in cart) { sum += e['price'] as int; }
+    return sum;
+  }
+  
+  Color getPlatformColor(String p) {
+    if (p == 'Swiggy') return Colors.orange;
+    if (p == 'Zomato') return Color(0xFFE23744);
+    if (p == 'Zepto') return Color(0xFF8B3CF7);
+    if (p == 'Blinkit') return Color(0xFFFACC15);
+    return Color(0xFF84CC16);
+  }
+  IconData getPlatformIcon(String p) {
+    if (p == 'Swiggy') return Icons.delivery_dining;
+    if (p == 'Zomato') return Icons.restaurant;
+    if (p == 'Zepto') return Icons.bolt;
+    if (p == 'Blinkit') return Icons.flash_on;
+    return Icons.shopping_cart;
+  }
 
   @override Widget build(BuildContext context){
     var foods = platformData[selectedPlatform]!;
+    Color pColor = getPlatformColor(selectedPlatform);
+    bool isDarkText = selectedPlatform == 'Blinkit' || selectedPlatform == 'BigBasket';
     return Scaffold(
-      appBar: AppBar(title: Text('Food Order - $selectedPlatform'), backgroundColor: platformColor, foregroundColor: (selectedPlatform=='Blinkit'||selectedPlatform=='BigBasket')? Colors.black : Colors.white, actions: [Stack(children: [IconButton(icon: Icon(Icons.shopping_cart), onPressed: ()=> _showCart()), if(cart.isNotEmpty) Positioned(right:6, top:6, child: CircleAvatar(radius:9, backgroundColor: Colors.black, child: Text('${cart.length}', style: TextStyle(fontSize:10, color: Colors.white, fontWeight: FontWeight.bold))))])]),
+      appBar: AppBar(title: Text('Food - $selectedPlatform'), backgroundColor: pColor, foregroundColor: isDarkText? Colors.black: Colors.white, actions: [Stack(children: [IconButton(icon: Icon(Icons.shopping_cart), onPressed: (){ _showCart(); }), if(cart.isNotEmpty) Positioned(right:6, top:6, child: CircleAvatar(radius:9, backgroundColor: Colors.black, child: Text('${cart.length}', style: TextStyle(fontSize:10, color: Colors.white))))])]),
       body: Column(children: [
-        Container(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4), color: Colors.grey.shade100, child: Row(children: [Icon(Icons.location_on, color: Colors.red, size: 18), SizedBox(width:4), Text('Deliver:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)), SizedBox(width:6), Expanded(child: DropdownButtonHideUnderline(child: DropdownButton<String>(value: selectedDistrict, isExpanded: true, isDense: true, style: TextStyle(fontSize:13, color: Colors.black, fontWeight: FontWeight.bold), icon: Icon(Icons.keyboard_arrow_down, size: 18, color: Colors.red), items: districts.map((d)=> DropdownMenuItem(value: d, child: Text(d))).toList(), onChanged: (val){ setState(()=> selectedDistrict = val!); },))) ,])),
-        Container(height: 54, padding: EdgeInsets.symmetric(vertical:6), child: ListView(scrollDirection: Axis.horizontal, padding: EdgeInsets.symmetric(horizontal: 8), children: ['Swiggy','Zomato','Zepto','Blinkit','BigBasket'].map((p)=> Padding(padding: EdgeInsets.only(right:8), child: _platformChip(p))).toList())),
-        Container(padding: EdgeInsets.symmetric(horizontal:12, vertical:6), color: platformColor.withOpacity(0.15), child: Row(children: [Icon(Icons.store, size:14, color: platformColor), SizedBox(width:6), Expanded(child: Text('$selectedPlatform • $selectedDistrict • ${selectedPlatform=='Blinkit' || selectedPlatform=='Zepto' ? '8-10 mins' : selectedPlatform=='BigBasket' ? '2 Hours Slot' : '25-30 mins'} Delivery', style: TextStyle(fontSize:11, fontWeight: FontWeight.bold, color: platformColor))) ,])),
-        Expanded(child: ListView.builder(padding: EdgeInsets.all(10), itemCount: foods.length, itemBuilder: (c,i){ return Card(margin: EdgeInsets.only(bottom:10), elevation: 2, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), child: ListTile(leading: CircleAvatar(backgroundColor: platformColor.withOpacity(0.15), child: Icon(foods[i]['icon'] as IconData, color: platformColor, size: 20)), title: Text(foods[i]['name'], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)), subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('${foods[i]['shop']} • ${foods[i]['time']}', style: TextStyle(fontSize: 10)), SizedBox(height:2), Text('Rs. ${foods[i]['price']}', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 12))]), trailing: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: platformColor, foregroundColor: (selectedPlatform=='Blinkit'||selectedPlatform=='BigBasket')? Colors.black:Colors.white, padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), minimumSize: Size(60,30)), onPressed: (){ setState(()=> cart.add({...foods[i], 'platform': selectedPlatform})); ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${foods[i]['name']} added from $selectedPlatform!'), duration: Duration(milliseconds: 700))); }, child: Text('ADD', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold))))); })),
-        if(cart.isNotEmpty) Container(padding: EdgeInsets.all(12), decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)]), child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Rs. $total Total', style: TextStyle(fontWeight: FontWeight.bold, fontSize:14)), Text('${cart.length} items • $selectedDistrict', style: TextStyle(fontSize: 10, color: Colors.grey))]), ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.green), onPressed: ()=> _showCart(), child: Text('Order Now (${cart.length})'))])),
+        Container(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4), color: Colors.grey.shade100, child: Row(children: [Icon(Icons.location_on, color: Colors.red, size: 18), SizedBox(width:4), Text('Deliver:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)), SizedBox(width:6), Expanded(child: DropdownButtonHideUnderline(child: DropdownButton<String>(value: selectedDistrict, isExpanded: true, isDense: true, style: TextStyle(fontSize:13, color: Colors.black, fontWeight: FontWeight.bold), icon: Icon(Icons.keyboard_arrow_down, size: 18, color: Colors.red), items: districts.map((d)=> DropdownMenuItem(value: d, child: Text(d))).toList(), onChanged: (val){ if(val!=null){ setState((){ selectedDistrict = val; }); } },))) ,])),
+        Container(height: 54, padding: EdgeInsets.symmetric(vertical:6), child: ListView(scrollDirection: Axis.horizontal, padding: EdgeInsets.symmetric(horizontal: 8), children: ['Swiggy','Zomato','Zepto','Blinkit','BigBasket'].map((p)=> Padding(padding: EdgeInsets.only(right:8), child: platformChip(p))).toList())),
+        Container(padding: EdgeInsets.symmetric(horizontal:12, vertical:6), color: pColor.withOpacity(0.15), child: Row(children: [Icon(Icons.store, size:14, color: pColor), SizedBox(width:6), Expanded(child: Text('$selectedPlatform • $selectedDistrict • ${selectedPlatform=='Blinkit' || selectedPlatform=='Zepto' ? '8-10 mins' : selectedPlatform=='BigBasket' ? '2 Hours Slot' : '25-30 mins'}', style: TextStyle(fontSize:11, fontWeight: FontWeight.bold, color: pColor))) ,])),
+        Expanded(child: ListView.builder(padding: EdgeInsets.all(10), itemCount: foods.length, itemBuilder: (c,i){ Color col = getPlatformColor(selectedPlatform); return Card(margin: EdgeInsets.only(bottom:10), child: ListTile(leading: CircleAvatar(backgroundColor: col.withOpacity(0.15), child: Icon(foods[i]['icon'] as IconData, color: col, size: 20)), title: Text(foods[i]['name'], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)), subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('${foods[i]['shop']} • ${foods[i]['time']}', style: TextStyle(fontSize: 10)), Text('Rs. ${foods[i]['price']}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))]), trailing: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: col, foregroundColor: (selectedPlatform=='Blinkit'||selectedPlatform=='BigBasket')? Colors.black: Colors.white), onPressed: (){ setState((){ cart.add({'name': foods[i]['name'], 'price': foods[i]['price'], 'platform': selectedPlatform, 'shop': foods[i]['shop']}); }); ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${foods[i]['name']} added!'), duration: Duration(milliseconds: 700))); }, child: Text('ADD', style: TextStyle(fontSize: 11))))); })),
+        if(cart.isNotEmpty) Container(padding: EdgeInsets.all(12), decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)]), child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Rs. $total Total', style: TextStyle(fontWeight: FontWeight.bold, fontSize:14)), Text('${cart.length} items • $selectedDistrict', style: TextStyle(fontSize: 10, color: Colors.grey))]), ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.green), onPressed: (){ _showCart(); }, child: Text('Order Now (${cart.length})'))])),
       ]),
     );
   }
-  Widget _platformChip(String name){
-    bool isSel = selectedPlatform==name; Color color = pColors[name]!;
-    return GestureDetector(onTap: ()=> setState(()=> selectedPlatform=name), child: Container(padding: EdgeInsets.symmetric(horizontal:14, vertical:8), decoration: BoxDecoration(color: isSel? color : Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: color, width: isSel? 2:1.2)), child: Row(children: [Icon(pIcons[name], size:16, color: isSel? ((name=='Blinkit'||name=='BigBasket')? Colors.black:Colors.white) : color), SizedBox(width:5), Text(name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: isSel? ((name=='Blinkit'||name=='BigBasket')? Colors.black:Colors.white) : color))]))));
+
+  Widget platformChip(String name){
+    bool isSel = selectedPlatform==name;
+    Color color = getPlatformColor(name);
+    bool darkText = name=='Blinkit' || name=='BigBasket';
+    Color textColor;
+    if(isSel){
+      textColor = darkText? Colors.black : Colors.white;
+    } else {
+      textColor = color;
+    }
+    return GestureDetector(
+      onTap: (){ setState((){ selectedPlatform = name; }); },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal:14, vertical:8),
+        decoration: BoxDecoration(color: isSel? color : Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: color, width: isSel? 2:1.2)),
+        child: Row(children: [Icon(getPlatformIcon(name), size:16, color: textColor), SizedBox(width:5), Text(name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: textColor))])
+      )
+    );
   }
+
   void _showCart(){
     showModalBottomSheet(context: context, isScrollControlled: true, builder: (_)=> Container(padding: EdgeInsets.all(16), child: Column(mainAxisSize: MainAxisSize.min, children: [
-      Text('Your Cart - $selectedDistrict', style: TextStyle(fontSize:18, fontWeight: FontWeight.bold)), SizedBox(height:10),
-      ConstrainedBox(constraints: BoxConstraints(maxHeight: 320), child: ListView(children: cart.map((f){ Color col = pColors[f['platform']]!; return ListTile(dense:true, leading: CircleAvatar(radius:12, backgroundColor: col, child: Text((f['platform'] as String).substring(0,1), style: TextStyle(fontSize:10, color: Colors.white, fontWeight: FontWeight.bold))), title: Text(f['name'], style: TextStyle(fontSize: 13)), subtitle: Text('${f['platform']} - ${f['shop']}', style: TextStyle(fontSize: 10)), trailing: Text('Rs.${f['price']}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))); }).toList())),
-      Divider(), Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Total', style: TextStyle(fontWeight: FontWeight.bold, fontSize:18)), Text('Rs. $total', style: TextStyle(fontWeight: FontWeight.bold, fontSize:18))]), SizedBox(height:6), Text('Deliver to: $selectedDistrict, Tamil Nadu', style: TextStyle(color: Colors.grey, fontSize: 11)), SizedBox(height:10),
-      SizedBox(width: double.infinity, child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.green, padding: EdgeInsets.all(14)), onPressed: (){ Navigator.pop(context); setState(()=> cart=[]); ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Order Success da! $selectedDistrict ku 5 platforms ready!'), backgroundColor: Colors.green, duration: Duration(seconds: 3))); }, child: Text('CONFIRM ORDER - Rs. $total'))),
+      Text('Cart - $selectedDistrict', style: TextStyle(fontSize:18, fontWeight: FontWeight.bold)), SizedBox(height:10),
+      ConstrainedBox(constraints: BoxConstraints(maxHeight: 320), child: ListView(children: cart.map((f){ Color col = getPlatformColor(f['platform']); return ListTile(dense:true, leading: CircleAvatar(radius:12, backgroundColor: col, child: Text((f['platform'] as String).substring(0,1), style: TextStyle(fontSize:10, color: Colors.white, fontWeight: FontWeight.bold))), title: Text(f['name'], style: TextStyle(fontSize: 13)), subtitle: Text('${f['platform']} - ${f['shop']}', style: TextStyle(fontSize: 10)), trailing: Text('Rs.${f['price']}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))); }).toList())),
+      Divider(), Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Total', style: TextStyle(fontWeight: FontWeight.bold, fontSize:18)), Text('Rs. $total', style: TextStyle(fontWeight: FontWeight.bold, fontSize:18))]), SizedBox(height:10),
+      SizedBox(width: double.infinity, child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.green, padding: EdgeInsets.all(14)), onPressed: (){ Navigator.pop(context); setState((){ cart=[]; }); ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Order Success da! $selectedDistrict ku delivery!'), backgroundColor: Colors.green)); }, child: Text('CONFIRM - Rs. $total'))),
       SizedBox(height: 20),
     ])));
   }
