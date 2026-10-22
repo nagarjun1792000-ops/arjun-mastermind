@@ -1,74 +1,57 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(ArjunApp());
+  runApp(const ArjunApp());
 }
 
 class ArjunApp extends StatelessWidget {
+  const ArjunApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomePage(),
     );
   }
 }
 
-class TravelHubPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Travel')),
-      body: Center(child: Text('Travel - Bus Booking Coming Soon da!')),
-    );
-  }
-}
-
-class DressHubPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Dress Order')),
-      body: Center(child: Text('Dress Order Coming Soon da!')),
-    );
-  }
-}
-
 class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFAF5FF),
+      backgroundColor: const Color(0xFFFAF5FF),
       body: Column(
         children: [
           Container(
-            padding: EdgeInsets.fromLTRB(20, 60, 20, 40),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.fromLTRB(20, 60, 20, 40),
+            decoration: const BoxDecoration(
               color: Color(0xFF7C3AED),
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(40),
                 bottomRight: Radius.circular(40),
               ),
             ),
-            child: Center(
+            child: const Center(
               child: Text(
                 'ARJUN MASTERMIND',
                 style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Expanded(
             child: GridView.count(
               crossAxisCount: 3,
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               children: [
-                homeCard(context, 'Games', Icons.sports_esports, GamesHubPage()),
-                homeCard(context, 'Food', Icons.fastfood, FoodHubPage()),
-                homeCard(context, 'Movies', Icons.movie, MovieNowShowingPage()),
-                homeCard(context, 'Jobs', Icons.work, JobsHubPage()),
-                homeCard(context, 'Travel', Icons.directions_bus, TravelHubPage()),
-                homeCard(context, 'Dress', Icons.checkroom, DressHubPage()),
+                _homeCard(context, 'Games', Icons.sports_esports, const GamesHubPage()),
+                _homeCard(context, 'Food', Icons.fastfood, const FoodHubPage()),
+                _homeCard(context, 'Movies', Icons.movie, const MoviePage()),
+                _homeCard(context, 'Jobs', Icons.work, const JobsHubPage()),
+                _homeCard(context, 'Travel', Icons.directions_bus, const TravelPage()),
+                _homeCard(context, 'Dress', Icons.checkroom, const DressPage()),
               ],
             ),
           ),
@@ -77,7 +60,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget homeCard(BuildContext ctx, String t, IconData ic, Widget page) {
+  Widget _homeCard(BuildContext ctx, String t, IconData ic, Widget page) {
     return GestureDetector(
       onTap: () {
         Navigator.push(ctx, MaterialPageRoute(builder: (_) => page));
@@ -87,9 +70,9 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(ic, size: 40, color: Color(0xFF7C3AED)),
-            SizedBox(height: 8),
-            Text(t, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+            Icon(ic, size: 40, color: const Color(0xFF7C3AED)),
+            const SizedBox(height: 8),
+            Text(t, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
           ],
         ),
       ),
@@ -98,160 +81,337 @@ class HomePage extends StatelessWidget {
 }
 
 class GamesHubPage extends StatelessWidget {
+  const GamesHubPage({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Games Hub'), backgroundColor: Colors.orange),
+      appBar: AppBar(title: const Text('Games')),
       body: ListView(
-        padding: EdgeInsets.all(16),
         children: [
-          Card(child: ListTile(leading: Icon(Icons.grid_3x3, size: 40, color: Colors.orange), title: Text('Tic Tac Toe', style: TextStyle(fontWeight: FontWeight.bold)), trailing: Icon(Icons.arrow_forward), onTap: () { Navigator.push(context, MaterialPageRoute(builder: (_) => TicTacToePage())); })),
-          Card(child: ListTile(leading: Icon(Icons.gamepad, size: 40, color: Colors.green), title: Text('Snake Game'), subtitle: Text('Coming Soon'), onTap: () {})),
+          ListTile(
+            title: const Text('Tic Tac Toe'),
+            trailing: const Icon(Icons.arrow_forward),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const TicPage()));
+            },
+          ),
         ],
       ),
     );
   }
 }
 
-class TicTacToePage extends StatefulWidget {
+class TicPage extends StatefulWidget {
+  const TicPage({super.key});
   @override
-  State<TicTacToePage> createState() => TicTacToePageState();
+  State<TicPage> createState() => TicPageState();
 }
 
-class TicTacToePageState extends State<TicTacToePage> {
+class TicPageState extends State<TicPage> {
   List<String> board = List.filled(9, '');
   bool xTurn = true;
-  String win = '';
-
-  void checkWin() {
-    List<List<int>> w = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-    for (var p in w) {
-      if (board[p[0]] != '' && board[p[0]] == board[p[1]] && board[p[1]] == board[p[2]]) {
-        win = board[p[0]];
-        return;
-      }
-    }
-    if (!board.contains('')) {
-      win = 'Draw';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Tic Tac Toe')),
-      body: Column(
-        children: [
-          SizedBox(height: 20),
-          Text(win == '' ? '${xTurn ? "X" : "O"} Turn' : win == 'Draw' ? 'Draw!' : '$win Wins!', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-          Expanded(
-            child: GridView.builder(
-              padding: EdgeInsets.all(20),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-              itemCount: 9,
-              itemBuilder: (c, i) {
-                return GestureDetector(
-                  onTap: () {
-                    if (board[i] == '' && win == '') {
-                      setState(() {
-                        board[i] = xTurn ? 'X' : 'O';
-                        xTurn = !xTurn;
-                        checkWin();
-                      });
-                    }
-                  },
-                  child: Card(child: Center(child: Text(board[i], style: TextStyle(fontSize: 40)))),
-                );
-              },
-            ),
-          ),
-          ElevatedButton(onPressed: () { setState(() { board = List.filled(9, ''); win = ''; xTurn = true; }); }, child: Text('Restart')),
-          SizedBox(height: 20),
-        ],
+      appBar: AppBar(title: const Text('Tic Tac Toe')),
+      body: GridView.builder(
+        padding: const EdgeInsets.all(20),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+        itemCount: 9,
+        itemBuilder: (c, i) {
+          return GestureDetector(
+            onTap: () {
+              if (board[i] == '') {
+                setState(() {
+                  board[i] = xTurn ? 'X' : 'O';
+                  xTurn = !xTurn;
+                });
+              }
+            },
+            child: Card(child: Center(child: Text(board[i], style: const TextStyle(fontSize: 40)))),
+          );
+        },
       ),
     );
   }
 }
 
 class FoodHubPage extends StatefulWidget {
+  const FoodHubPage({super.key});
   @override
   State<FoodHubPage> createState() => FoodHubPageState();
 }
 
 class FoodHubPageState extends State<FoodHubPage> {
   String district = 'Chennai';
+  List<String> districts = ['Chennai','Coimbatore','Madurai','Salem','Trichy','Thanjavur'];
   String platform = 'Swiggy';
-  List<String> districts = ['Ariyalur','Chengalpattu','Chennai','Coimbatore','Cuddalore','Dharmapuri','Dindigul','Erode','Kallakurichi','Kanchipuram','Kanyakumari','Karur','Krishnagiri','Madurai','Mayiladuthurai','Nagapattinam','Namakkal','Nilgiris','Perambalur','Pudukkottai','Ramanathapuram','Ranipet','Salem','Sivaganga','Tenkasi','Thanjavur','Theni','Thoothukudi','Tiruchirappalli','Tirunelveli','Tirupattur','Tiruppur','Tiruvallur','Tiruvannamalai','Tiruvarur','Vellore','Viluppuram','Virudhunagar'];
-  Map<String, List<Map<String, dynamic>>> data = {
-    'Swiggy': [{'name':'Chicken Biryani','price':250},{'name':'Mutton Biryani','price':350}],
-    'Zomato': [{'name':'Fried Rice','price':220},{'name':'Noodles','price':180}],
-    'Zepto': [{'name':'Milk 500ml','price':32}],
-    'Blinkit': [{'name':'Milk 1L','price':60}],
-    'BigBasket': [{'name':'Tomato 1kg','price':35}],
-  };
-  List<Map<String, dynamic>> cart = [];
-  int total() { int s=0; for(var e in cart){ s += e['price'] as int; } return s; }
+  List<String> platforms = ['Swiggy','Zomato','Zepto','Blinkit','BigBasket'];
   @override
   Widget build(BuildContext context) {
-    var foods = data[platform]!;
     return Scaffold(
-      appBar: AppBar(title: Text('Food - $platform - $district'), backgroundColor: Colors.orange),
+      appBar: AppBar(title: Text('Food - $district')),
       body: Column(
         children: [
-          Container(padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6), color: Colors.grey.shade100, child: Row(children: [Icon(Icons.location_on, color: Colors.red, size: 18), SizedBox(width:6), Expanded(child: DropdownButtonHideUnderline(child: DropdownButton<String>(value: district, isExpanded: true, items: districts.map((d) => DropdownMenuItem(value: d, child: Text(d, style: TextStyle(fontSize:12)))).toList(), onChanged: (v) { setState(() { district = v!; }); }))) ])),
-          Container(height: 50, child: ListView(scrollDirection: Axis.horizontal, padding: EdgeInsets.all(8), children: ['Swiggy','Zomato','Zepto','Blinkit','BigBasket'].map((p) { return Padding(padding: EdgeInsets.only(right:8), child: ChoiceChip(label: Text(p), selected: platform==p, onSelected: (v) { setState(() { platform=p; }); })); }).toList())),
-          Expanded(child: ListView.builder(padding: EdgeInsets.all(10), itemCount: foods.length, itemBuilder: (c,i) { return Card(child: ListTile(title: Text(foods[i]['name']), subtitle: Text('Rs.${foods[i]['price']}'), trailing: ElevatedButton(onPressed: () { setState(() { cart.add({'name':foods[i]['name'],'price':foods[i]['price']}); }); }, child: Text('ADD')))); })),
-          if(cart.isNotEmpty) Container(padding: EdgeInsets.all(12), color: Colors.white, child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Total Rs.${total()} - ${cart.length} items'), ElevatedButton(onPressed: () { setState(() { cart=[]; }); ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Order Success in $district!'), backgroundColor: Colors.green)); }, child: Text('Order Now'))])),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: DropdownButton<String>(
+              value: district,
+              isExpanded: true,
+              items: districts.map((d) => DropdownMenuItem(value: d, child: Text(d))).toList(),
+              onChanged: (v) {
+                setState(() { district = v!; });
+              },
+            ),
+          ),
+          SizedBox(
+            height: 50,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: platforms.map((p) {
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: ChoiceChip(
+                    label: Text(p),
+                    selected: platform == p,
+                    onSelected: (v) {
+                      setState(() { platform = p; });
+                    },
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          const Expanded(child: Center(child: Text('Food Menu Here - Order Now'))),
         ],
       ),
     );
   }
 }
 
-class MovieNowShowingPage extends StatefulWidget {
+class MoviePage extends StatefulWidget {
+  const MoviePage({super.key});
   @override
-  State<MovieNowShowingPage> createState() => MovieNowShowingPageState();
+  State<MoviePage> createState() => MoviePageState();
 }
 
-class MovieNowShowingPageState extends State<MovieNowShowingPage> {
+class MoviePageState extends State<MoviePage> {
   String district = 'Coimbatore';
-  String filter = 'Tamil';
-  List<String> districts = ['Chennai','Coimbatore','Madurai','Salem','Trichy','Tirunelveli','Thanjavur','Vellore','Erode','Tiruppur'];
-  List<Map<String, dynamic>> movies = [
-    {'title':'Jailer 2','sub':'367K+ likes','lang':'Tamil','col':Colors.brown},
-    {'title':'Street Fighter','sub':'7.3  3.6K+ votes','lang':'English','col':Colors.red},
-    {'title':'Drones','sub':'8.9  1.4K+ votes','lang':'Tamil','col':Colors.orange},
-    {'title':'Baththa','sub':'9.2  37.2K+ votes','lang':'Tamil','col':Colors.deepOrange},
-    {'title':'Leo 2','sub':'420K+ likes','lang':'Tamil','col':Colors.redAccent},
-    {'title':'KGF 3','sub':'9.0  50K+ votes','lang':'Kannada','col':Colors.amber},
-  ];
-  List<Map<String, dynamic>> get filtered {
-    if (filter == 'All') { return movies; }
-    if (filter == 'New Releases') { return movies; }
-    return movies.where((m) => m['lang'] == filter).toList();
-  }
-  Widget chip(String label) {
-    bool sel = filter == label;
-    return Container(margin: EdgeInsets.only(right:8), child: ChoiceChip(label: Text(label, style: TextStyle(fontSize:12)), selected: sel, selectedColor: Color(0xFFFFE4E8), onSelected: (v) { setState(() { filter = label; }); }));
-  }
+  List<String> districts = ['Chennai','Coimbatore','Madurai','Salem','Trichy'];
+  String filter = 'All';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, elevation: 0, iconTheme: IconThemeData(color: Colors.black), title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Now Showing', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize:18)), Text('$district | ${filtered.length} Movies', style: TextStyle(color: Colors.grey, fontSize:12))])),
+      appBar: AppBar(title: Text('Movies - $district')),
       body: Column(
         children: [
-          Container(padding: EdgeInsets.symmetric(horizontal: 12), child: DropdownButton<String>(value: district, isExpanded: true, items: districts.map((d) => DropdownMenuItem(value: d, child: Text(d))).toList(), onChanged: (v) { setState(() { district = v!; }); })),
-          SingleChildScrollView(scrollDirection: Axis.horizontal, padding: EdgeInsets.all(8), child: Row(children: [chip('All'), chip('New Releases'), chip('Tamil'), chip('English'), chip('Hindi')])),
-          Expanded(child: GridView.builder(padding: EdgeInsets.all(12), gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.62, crossAxisSpacing: 12, mainAxisSpacing: 12), itemCount: filtered.length, itemBuilder: (c,i) { var m=filtered[i]; return GestureDetector(onTap: () { Navigator.push(context, MaterialPageRoute(builder: (_) => SeatPage(movie: m, district: district))); }, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Container(height: 200, decoration: BoxDecoration(color: m['col'], borderRadius: BorderRadius.circular(12)), child: Center(child: Text(m['title'], style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize:20)))), SizedBox(height:6), Text(m['sub'], style: TextStyle(fontSize:11, color: Colors.grey)), Text(m['title'], style: TextStyle(fontWeight: FontWeight.bold))])); })),
+          DropdownButton<String>(
+            value: district,
+            isExpanded: true,
+            items: districts.map((d) => DropdownMenuItem(value: d, child: Text(d))).toList(),
+            onChanged: (v) { setState(() { district = v!; }); },
+          ),
+          Expanded(
+            child: GridView.count(
+              crossAxisCount: 2,
+              children: [
+                _movieCard('Jailer 2'),
+                _movieCard('Leo 2'),
+                _movieCard('KGF 3'),
+                _movieCard('Avatar 3'),
+              ],
+            ),
+          ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(backgroundColor: Color(0xFFFF2C5A), onPressed: () {}, label: Text('Browse by Cinemas', style: TextStyle(color: Colors.white)), icon: Icon(Icons.location_on, color: Colors.white)),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+  Widget _movieCard(String title) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => SeatPage(movieTitle: title, district: district)));
+      },
+      child: Card(
+        child: Center(child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold))),
+      ),
     );
   }
 }
 
 class SeatPage extends StatefulWidget {
-  final Map<String, dynamic> movie;
-  final
+  final String movieTitle;
+  final String district;
+  const SeatPage({super.key, required this.movieTitle, required this.district});
+  @override
+  State<SeatPage> createState() => SeatPageState();
+}
+
+class SeatPageState extends State<SeatPage> {
+  List<String> selected = [];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.movieTitle)),
+      body: Column(
+        children: [
+          Text('District: ${widget.district}'),
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 8),
+              itemCount: 40,
+              itemBuilder: (c, i) {
+                String seat = 'A${i+1}';
+                bool sel = selected.contains(seat);
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (sel) { selected.remove(seat); } else { selected.add(seat); }
+                    });
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(4),
+                    color: sel ? Colors.green : Colors.white,
+                    child: Center(child: Text('${i+1}', style: const TextStyle(fontSize: 10))),
+                  ),
+                );
+              },
+            ),
+          ),
+          if (selected.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: ElevatedButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Booked ${selected.join(",")} in ${widget.district}')));
+                  Navigator.pop(context);
+                },
+                child: Text('Pay Rs.${selected.length * 180}'),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class JobsHubPage extends StatefulWidget {
+  const JobsHubPage({super.key});
+  @override
+  State<JobsHubPage> createState() => JobsHubPageState();
+}
+
+class JobsHubPageState extends State<JobsHubPage> {
+  String district = 'All Districts';
+  String filter = 'All';
+  List<String> districts = ['All Districts','Chennai','Coimbatore','Madurai','Salem','Trichy','Thanjavur','Vellore','Erode','Tiruppur','Ariyalur','Chengalpattu','Cuddalore','Dharmapuri','Dindigul','Kallakurichi','Kanchipuram','Kanyakumari','Karur','Krishnagiri','Mayiladuthurai','Nagapattinam','Namakkal','Nilgiris','Perambalur','Pudukkottai','Ramanathapuram','Ranipet','Sivaganga','Tenkasi','Theni','Thoothukudi','Tiruchirappalli','Tirunelveli','Tirupattur','Tiruvallur','Tiruvannamalai','Tiruvarur','Viluppuram','Virudhunagar'];
+  List<Map<String, String>> jobs = [
+    {'title':'Flutter Developer','company':'Zoho','salary':'45k','type':'IT','loc':'Chennai'},
+    {'title':'TNPSC Group 4','company':'TN Govt','salary':'35k','type':'Government','loc':'All Districts'},
+    {'title':'Bank Clerk','company':'SBI','salary':'28k','type':'Government','loc':'Coimbatore'},
+    {'title':'Teacher','company':'Velammal','salary':'32k','type':'Private','loc':'Madurai'},
+    {'title':'Police','company':'TN Police','salary':'38k','type':'Government','loc':'All Districts'},
+    {'title':'Nurse','company':'Apollo','salary':'30k','type':'Private','loc':'Trichy'},
+  ];
+  List<Map<String, String>> get filtered {
+    var list = jobs;
+    if (filter != 'All') { list = list.where((j) => j['type'] == filter).toList(); }
+    if (district != 'All Districts') { list = list.where((j) => j['loc'] == district || j['loc'] == 'All Districts').toList(); }
+    return list;
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Jobs - $district')),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: DropdownButton<String>(
+              value: district,
+              isExpanded: true,
+              items: districts.map((d) => DropdownMenuItem(value: d, child: Text(d, style: const TextStyle(fontSize: 12)))).toList(),
+              onChanged: (v) { setState(() { district = v!; }); },
+            ),
+          ),
+          SizedBox(
+            height: 50,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: ['All','IT','Government','Private'].map((f) {
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: ChoiceChip(
+                    label: Text(f),
+                    selected: filter == f,
+                    onSelected: (v) { setState(() { filter = f; }); },
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: filtered.length,
+              itemBuilder: (c, i) {
+                var j = filtered[i];
+                return Card(
+                  child: ListTile(
+                    title: Text(j['title']!),
+                    subtitle: Text('${j['company']!} - ${j['salary']!} - ${j['loc']!}'),
+                    trailing: ElevatedButton(
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (ctx) {
+                            return Container(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(j['title']!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                                  const SizedBox(height: 10),
+                                  const TextField(decoration: InputDecoration(labelText: 'Name', border: OutlineInputBorder())),
+                                  const SizedBox(height: 10),
+                                  const TextField(decoration: InputDecoration(labelText: 'Phone', border: OutlineInputBorder())),
+                                  const SizedBox(height: 10),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pop(ctx);
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Applied for ${j['title']!}')));
+                                    },
+                                    child: const Text('APPLY NOW'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: const Text('Apply'),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class TravelPage extends StatelessWidget {
+  const TravelPage({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(appBar: AppBar(title: const Text('Travel')), body: const Center(child: Text('Travel Coming Soon')));
+  }
+}
+
+class DressPage extends StatelessWidget {
+  const DressPage({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(appBar: AppBar(title: const Text('Dress')), body: const Center(child: Text('Dress Order Coming Soon')));
+  }
+}
