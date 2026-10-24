@@ -1,16 +1,12 @@
 name: arjun_mastermind
-description: Arjun Mastermind - AdSense + Affiliate
+description: Arjun Mastermind
 publish_to: 'none'
 version: 1.0.0+1
-
 environment:
   sdk: '>=3.0.0 <4.0.0'
-
 dependencies:
   flutter:
     sdk: flutter
   url_launcher: ^6.2.0
-  # google_mobile_ads ah ipo comment panniten - build pass aana piragu add pannalam
-
 flutter:
   uses-material-design: true
