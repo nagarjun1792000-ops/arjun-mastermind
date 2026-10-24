@@ -1,5 +1,5 @@
 name: arjun_mastermind
-description: Arjun Mastermind - Tamil Multi Service App with Push Notifications
+description: Arjun Mastermind - Earn with Ads + Affiliate
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -9,15 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
-  firebase_core: ^2.32.0
-  firebase_messaging: ^14.9.4
-  flutter_local_notifications: ^19.4.1
-
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^3.0.0
+  google_mobile_ads: ^4.0.0
+  url_launcher: ^6.2.0
 
 flutter:
   uses-material-design: true
