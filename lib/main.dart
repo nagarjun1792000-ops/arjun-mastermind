@@ -1,290 +1,461 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const ArjunMastermind());
-}
+void main() => runApp(const ArjunMastermindApp());
 
-const Color purple = Color(0xFF7939E8);
-const Color background = Color(0xFFFCF7FF);
+const Color brandPurple = Color(0xFF5E35B1);
+const Color pageBackground = Color(0xFFF7F5FC);
 
-class ArjunMastermind extends StatelessWidget {
-  const ArjunMastermind({super.key});
+class ArjunMastermindApp extends StatelessWidget {
+  const ArjunMastermindApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       title: 'Arjun Mastermind',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: purple),
-        scaffoldBackgroundColor: background,
+        colorScheme: ColorScheme.fromSeed(seedColor: brandPurple),
+        scaffoldBackgroundColor: pageBackground,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: brandPurple,
+          foregroundColor: Colors.white,
+          centerTitle: false,
+        ),
       ),
       home: const HomeScreen(),
     );
   }
 }
 
-class AppOption {
-  final String name;
+class AppFeature {
+  final String title;
+  final String subtitle;
   final IconData icon;
-  final List<String> items;
-  final bool isPremium;
-  final bool isAffiliate;
+  final List<ServiceItem> services;
+  final bool premium;
+  final bool partnerLinks;
 
-  const AppOption(this.name, this.icon, this.items, {this.isPremium = false, this.isAffiliate = false});
+  const AppFeature({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.services,
+    this.premium = false,
+    this.partnerLinks = false,
+  });
 }
 
-const List<AppOption> options = [
-  AppOption('Games', Icons.sports_esports, ['Online Games','Puzzle Games','Action Games']),
-  AppOption('Food', Icons.lunch_dining, ['Restaurants','Food Menu','Order Food'], isAffiliate: true),
-  AppOption('Movies', Icons.movie_creation, ['Tamil Movies','Malayalam Movies','Hollywood Movies','Hindi Movies','Tamil Dubbed Movies','Movie Booking']),
-  AppOption('Jobs', Icons.work, ['Private Jobs','Government Jobs','Part-Time Jobs','Work From Home'], isPremium: true),
-  AppOption('Travel', Icons.directions_bus, ['Bus Booking','Train Information','Flight Booking','Hotels'], isAffiliate: true),
-  AppOption('Dress', Icons.checkroom, ['Men Fashion','Women Fashion','Kids Fashion','Shoes'], isAffiliate: true),
-  AppOption('Books', Icons.menu_book, ['Tamil Books','English Books','Story Books'], isAffiliate: true),
-  AppOption('World News', Icons.public, ['India News','World News','Technology News','Sports News']),
-  AppOption('Recharge', Icons.phone_android, ['Mobile Recharge','DTH Recharge','Electricity Bills'], isPremium: true),
+class ServiceItem {
+  final String title;
+  final String description;
+
+  const ServiceItem(this.title, this.description);
+}
+
+const List<AppFeature> appFeatures = [
+  AppFeature(
+    title: 'Games',
+    subtitle: 'Game categories and discovery',
+    icon: Icons.sports_esports_rounded,
+    services: [
+      ServiceItem('Online Games', 'Discover online game options.'),
+      ServiceItem('Puzzle Games', 'Explore puzzle and brain games.'),
+      ServiceItem('Action Games', 'Browse action game categories.'),
+    ],
+  ),
+  AppFeature(
+    title: 'Food Order',
+    subtitle: 'Food and restaurant services',
+    icon: Icons.restaurant_rounded,
+    partnerLinks: true,
+    services: [
+      ServiceItem('Restaurants', 'Restaurant links can be connected here.'),
+      ServiceItem('Food Menu', 'Menus can be shown after a provider is connected.'),
+      ServiceItem('Order Food', 'Ordering requires a real restaurant or delivery API.'),
+    ],
+  ),
+  AppFeature(
+    title: 'Movies',
+    subtitle: 'Movies and ticket booking',
+    icon: Icons.movie_creation_rounded,
+    partnerLinks: true,
+    services: [
+      ServiceItem('Tamil Movies', 'Browse Tamil movie information.'),
+      ServiceItem('Malayalam Movies', 'Browse Malayalam movie information.'),
+      ServiceItem('Hollywood Movies', 'Browse Hollywood movie information.'),
+      ServiceItem('Hindi Movies', 'Browse Hindi movie information.'),
+      ServiceItem('Tamil Dubbed Movies', 'Browse Tamil-dubbed movie information.'),
+      ServiceItem('Movie Booking', 'Ticket booking requires an approved booking provider.'),
+    ],
+  ),
+  AppFeature(
+    title: 'Jobs',
+    subtitle: 'Job search resources',
+    icon: Icons.work_rounded,
+    premium: true,
+    services: [
+      ServiceItem('Private Jobs', 'Job listings require a verified source.'),
+      ServiceItem('Government Jobs', 'Official recruitment notifications can be linked here.'),
+      ServiceItem('Part-Time Jobs', 'Listings require a verified source.'),
+      ServiceItem('Work From Home', 'Check listings carefully and avoid paying recruiters.'),
+    ],
+  ),
+  AppFeature(
+    title: 'Travel',
+    subtitle: 'Travel planning and tickets',
+    icon: Icons.directions_bus_rounded,
+    partnerLinks: true,
+    services: [
+      ServiceItem('Bus Booking', 'Bus booking requires an approved provider/API.'),
+      ServiceItem('Train Information', 'Official railway information can be linked here.'),
+      ServiceItem('Flight Booking', 'Flight booking requires an approved provider/API.'),
+      ServiceItem('Hotels', 'Hotel booking requires a provider or affiliate link.'),
+    ],
+  ),
+  AppFeature(
+    title: 'Dress Order',
+    subtitle: 'Clothing and shopping categories',
+    icon: Icons.checkroom_rounded,
+    partnerLinks: true,
+    services: [
+      ServiceItem("Men's Fashion", 'Product listings require real store links.'),
+      ServiceItem("Women's Fashion", 'Product listings require real store links.'),
+      ServiceItem('Kids Fashion', 'Product listings require real store links.'),
+      ServiceItem('Shoes', 'Product listings require real store links.'),
+    ],
+  ),
+  AppFeature(
+    title: 'Books',
+    subtitle: 'Books and reading resources',
+    icon: Icons.menu_book_rounded,
+    partnerLinks: true,
+    services: [
+      ServiceItem('Tamil Books', 'Book listings can be connected to a legal seller.'),
+      ServiceItem('English Books', 'Book listings can be connected to a legal seller.'),
+      ServiceItem('Story Books', 'Use authorized listings and reading sources.'),
+      ServiceItem('Study Books', 'Use authorized listings and reading sources.'),
+    ],
+  ),
+  AppFeature(
+    title: 'World News',
+    subtitle: 'News topics and updates',
+    icon: Icons.public_rounded,
+    services: [
+      ServiceItem('India News', 'A trusted news API or publisher feed is required for live news.'),
+      ServiceItem('World News', 'A trusted news API or publisher feed is required for live news.'),
+      ServiceItem('Technology News', 'A trusted news API or publisher feed is required for live news.'),
+      ServiceItem('Sports News', 'A trusted news API or publisher feed is required for live news.'),
+    ],
+  ),
+  AppFeature(
+    title: 'Mobile Recharge',
+    subtitle: 'Recharge and bill payment',
+    icon: Icons.phone_android_rounded,
+    premium: true,
+    services: [
+      ServiceItem('Mobile Recharge', 'Real recharge needs an authorized payment/recharge provider.'),
+      ServiceItem('DTH Recharge', 'Real recharge needs an authorized payment/recharge provider.'),
+      ServiceItem('Electricity Bills', 'Bill payment needs an authorized bill-payment provider.'),
+    ],
+  ),
 ];
 
-// GLOBAL PREMIUM CHECK - Simple da!
-bool isUserPremium = false;
-
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String query = '';
+
+  @override
   Widget build(BuildContext context) {
+    final filtered = appFeatures.where((feature) {
+      final q = query.trim().toLowerCase();
+      if (q.isEmpty) return true;
+      return feature.title.toLowerCase().contains(q) ||
+          feature.subtitle.toLowerCase().contains(q) ||
+          feature.services.any((service) =>
+              service.title.toLowerCase().contains(q) ||
+              service.description.toLowerCase().contains(q));
+    }).toList();
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
             child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 25, bottom: 38),
+              padding: EdgeInsets.fromLTRB(
+                20,
+                MediaQuery.of(context).padding.top + 22,
+                20,
+                26,
+              ),
               decoration: const BoxDecoration(
-                color: purple,
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(65), bottomRight: Radius.circular(65)),
+                gradient: LinearGradient(
+                  colors: [Color(0xFF4527A0), Color(0xFF7E57C2), Color(0xFF9575CD)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                ),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 68, height: 68,
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(22)),
-                    child: const Icon(Icons.auto_awesome, size: 42, color: purple),
+                  Row(
+                    children: [
+                      Container(
+                        width: 56,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        child: const Icon(Icons.auto_awesome_rounded,
+                            color: brandPurple, size: 34),
+                      ),
+                      const SizedBox(width: 13),
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'ARJUN MASTERMIND',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 19,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text('Your World. One App.',
+                                style: TextStyle(color: Colors.white70)),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 14),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12),
-                    child: Text('ARJUN MASTERMIND', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 23, fontWeight: FontWeight.bold, letterSpacing: 1)),
+                  const SizedBox(height: 25),
+                  const Text(
+                    'What are you looking for?',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  const SizedBox(height: 8),
-                  const Text('Your World. One App.', style: TextStyle(color: Colors.white70, fontSize: 14)),
-                  const SizedBox(height: 12),
-                  if (!isUserPremium)
-                    GestureDetector(
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PremiumScreen())),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(color: Colors.amber, borderRadius: BorderRadius.circular(20)),
-                        child: const Text('GET PREMIUM @ Rs.99', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black)),
+                  const SizedBox(height: 7),
+                  const Text(
+                    'Explore services, discover ideas, and get started.',
+                    style: TextStyle(color: Colors.white70, fontSize: 13),
+                  ),
+                  const SizedBox(height: 18),
+                  TextField(
+                    onChanged: (value) => setState(() => query = value),
+                    decoration: InputDecoration(
+                      hintText: 'Search games, food, movies...',
+                      prefixIcon: const Icon(Icons.search, color: brandPurple),
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(17),
+                        borderSide: BorderSide.none,
                       ),
                     ),
+                  ),
                 ],
               ),
             ),
           ),
-
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(18, 24, 18, 10),
+            padding: const EdgeInsets.fromLTRB(18, 23, 18, 8),
             sliver: SliverToBoxAdapter(
-              child: TextField(
-                onSubmitted: (value) {
-                  final query = value.trim().toLowerCase();
-                  final matches = options.where((option) => option.name.toLowerCase().contains(query) || option.items.any((item) => item.toLowerCase().contains(query)));
-                  if (matches.isNotEmpty) {
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => OptionScreen(option: matches.first)));
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Option not found')));
-                  }
-                },
-                decoration: InputDecoration(
-                  hintText: 'Search Games, Food, Movies...',
-                  prefixIcon: const Icon(Icons.search, color: purple),
-                  filled: true, fillColor: Colors.white,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide.none),
-                ),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: Text('Explore All Services',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
+                  ),
+                  Text('${filtered.length} options',
+                      style: const TextStyle(color: Colors.black54, fontSize: 12)),
+                ],
               ),
             ),
           ),
-
-          const SliverPadding(
-            padding: EdgeInsets.fromLTRB(20, 18, 20, 14),
-            sliver: SliverToBoxAdapter(child: Text('Explore All Services', style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold, color: Color(0xFF281A35)))),
-          ),
-
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            sliver: SliverLayoutBuilder(
-              builder: (context, constraints) {
-                final width = constraints.crossAxisExtent;
-                final columns = width >= 650 ? 5 : width >= 400 ? 4 : 3;
-                return SliverGrid(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: columns, crossAxisSpacing: 10, mainAxisSpacing: 12, childAspectRatio: 0.82),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final option = options[index];
-                      return Material(
-                        color: const Color(0xFFF6F0FA),
-                        borderRadius: BorderRadius.circular(25),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(25),
-                          onTap: () {
-                            // EARNING LOGIC 1: PREMIUM CHECK
-                            if (option.isPremium && !isUserPremium) {
-                              Navigator.push(context, MaterialPageRoute(builder: (_) => PremiumScreen(optionName: option.name)));
-                              return;
-                            }
-                            Navigator.push(context, MaterialPageRoute(builder: (_) => OptionScreen(option: option)));
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
-                              border: Border.all(color: purple.withOpacity(0.08)),
-                              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 5, offset: const Offset(0, 3))],
+          if (filtered.isEmpty)
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.all(28),
+                child: Center(child: Text('No results. Try a different search.')),
+              ),
+            )
+          else
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 14),
+              sliver: SliverLayoutBuilder(
+                builder: (context, constraints) {
+                  final width = constraints.crossAxisExtent;
+                  final columns = width >= 900
+                      ? 5
+                      : width >= 600
+                          ? 4
+                          : width >= 400
+                              ? 3
+                              : 2;
+                  return SliverGrid(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: columns,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: 0.86,
+                    ),
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final feature = filtered[index];
+                        return FeatureCard(
+                          feature: feature,
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => FeatureScreen(feature: feature),
                             ),
-                            child: Stack(
+                          ),
+                        );
+                      },
+                      childCount: filtered.length,
+                    ),
+                  );
+                },
+              ),
+            ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(18, 6, 18, 28),
+            sliver: SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  Card(
+                    elevation: 0,
+                    color: const Color(0xFFEDE7F6),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.workspace_premium_rounded,
+                              color: brandPurple, size: 38),
+                          const SizedBox(width: 12),
+                          const Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(option.icon, color: purple, size: 39),
-                                    const SizedBox(height: 13),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 3),
-                                      child: Text(option.name, textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF281A35))),
-                                    ),
-                                    if (option.isAffiliate) const Padding(padding: EdgeInsets.only(top: 4), child: Text('EARN 10%', style: TextStyle(fontSize: 9, color: Colors.green, fontWeight: FontWeight.bold))),
-                                  ],
+                                Text('Arjun Premium',
+                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                SizedBox(height: 4),
+                                Text(
+                                  'Payment is not enabled yet.',
+                                  style: TextStyle(color: Colors.black54, fontSize: 12),
                                 ),
-                                if (option.isPremium && !isUserPremium)
-                                  Positioned(top: 8, right: 8, child: Container(padding: const EdgeInsets.all(4), decoration: const BoxDecoration(color: Colors.amber, shape: BoxShape.circle), child: const Icon(Icons.lock, size: 12, color: Colors.black))),
                               ],
                             ),
                           ),
-                        ),
-                      );
-                    },
-                    childCount: options.length,
+                          FilledButton(
+                            onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => const PremiumScreen()),
+                            ),
+                            child: const Text('View'),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                );
-              },
-            ),
-          ),
-
-          const SliverPadding(padding: EdgeInsets.fromLTRB(16, 25, 16, 10), sliver: SliverToBoxAdapter(child: AdvertisementBox())),
-          const SliverPadding(padding: EdgeInsets.fromLTRB(20, 15, 20, 12), sliver: SliverToBoxAdapter(child: Text('Welcome to Arjun Mastermind!', style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)))),
-          const SliverPadding(padding: EdgeInsets.fromLTRB(16, 0, 16, 30), sliver: SliverToBoxAdapter(child: Text('Discover entertainment, shopping, travel, education and more in one place.', style: TextStyle(fontSize: 14, height: 1.6, color: Colors.black54)))),
-        ],
-      ),
-    );
-  }
-}
-
-class OptionScreen extends StatelessWidget {
-  final AppOption option;
-  const OptionScreen({super.key, required this.option});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(backgroundColor: purple, foregroundColor: Colors.white, title: Text(option.name)),
-      body: ListView(
-        padding: const EdgeInsets.all(18),
-        children: [
-          Container(
-            padding: const EdgeInsets.all(25),
-            decoration: BoxDecoration(color: purple, borderRadius: BorderRadius.circular(25)),
-            child: Column(
-              children: [
-                Icon(option.icon, color: Colors.white, size: 58),
-                const SizedBox(height: 12),
-                Text(option.name, style: const TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                Text(option.isAffiliate ? 'Shop & Earn Commission!' : 'Explore Arjun Mastermind', style: const TextStyle(color: Colors.white70)),
-              ],
-            ),
-          ),
-          const SizedBox(height: 22),
-          const Text('Available Options', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
-          ...option.items.map(
-            (item) => Card(
-              color: Colors.white,
-              child: ListTile(
-                leading: const CircleAvatar(backgroundColor: Color(0xFFEDE3FF), child: Icon(Icons.arrow_forward, color: purple)),
-                title: Text(item),
-                subtitle: option.isAffiliate ? const Text('Buy via Meesho/Amazon - You earn 10%', style: TextStyle(fontSize: 10, color: Colors.green)) : null,
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => DetailScreen(title: item, category: option.name, isAffiliate: option.isAffiliate)));
-                },
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Ad area placeholder • Real ads must be configured before launch.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 11, color: Colors.black45),
+                  ),
+                ],
               ),
             ),
           ),
-          const SizedBox(height: 20),
-          const AdvertisementBox(),
         ],
       ),
     );
   }
 }
 
-class DetailScreen extends StatelessWidget {
-  final String title;
-  final String category;
-  final bool isAffiliate;
-  const DetailScreen({super.key, required this.title, required this.category, this.isAffiliate = false});
+class FeatureCard extends StatelessWidget {
+  final AppFeature feature;
+  final VoidCallback onTap;
+
+  const FeatureCard({super.key, required this.feature, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(backgroundColor: purple, foregroundColor: Colors.white, title: Text(title)),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(25),
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(21),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(21),
+        child: Container(
+          padding: const EdgeInsets.all(11),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(21),
+            border: Border.all(color: brandPurple.withOpacity(0.08)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.035),
+                blurRadius: 11,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.auto_awesome, color: purple, size: 70),
-              const SizedBox(height: 20),
-              Text(title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 12),
-              Text('$category service', style: const TextStyle(color: Colors.black54)),
-              const SizedBox(height: 18),
-              Text(isAffiliate ? 'Click BUY to earn commission via affiliate link!' : 'This page is ready for development.', textAlign: TextAlign.center),
-              const SizedBox(height: 20),
-              if (isAffiliate)
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green, padding: const EdgeInsets.all(16)),
-                    onPressed: () {
-                      // AFFILIATE EARNING LOGIC
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: Colors.green,
-                          content: Text('Affiliate Link Clicked! You earned Rs.150 from $title sale!'),
-                          duration: const Duration(seconds: 3),
-                        ),
-                      );
-                      // REAL MEEDHU: launchUrl(Uri.parse('https://www.meesho.com/product?aff_id=YOUR_ID'))
-                    },
-                    child: const Text('BUY NOW & EARN COMMISSION', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  ),
+              Container(
+                height: 57,
+                width: 57,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEDE7F6),
+                  borderRadius: BorderRadius.circular(18),
                 ),
-              const SizedBox(height: 12),
-              const AdvertisementBox(),
+                child: Icon(feature.icon, color: brandPurple, size: 31),
+              ),
+              const SizedBox(height: 11),
+              Text(
+                feature.title,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                feature.premium
+                    ? 'PREMIUM'
+                    : feature.partnerLinks
+                        ? 'PARTNER LINKS'
+                        : 'EXPLORE',
+                style: TextStyle(
+                  color: feature.premium
+                      ? Colors.deepOrange
+                      : feature.partnerLinks
+                          ? Colors.teal
+                          : Colors.black45,
+                  fontSize: 9,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
         ),
@@ -293,99 +464,77 @@ class DetailScreen extends StatelessWidget {
   }
 }
 
-class PremiumScreen extends StatefulWidget {
-  final String? optionName;
-  const PremiumScreen({super.key, this.optionName});
-  @override
-  State<PremiumScreen> createState() => _PremiumScreenState();
-}
+class FeatureScreen extends StatelessWidget {
+  final AppFeature feature;
 
-class _PremiumScreenState extends State<PremiumScreen> {
-  bool isPaying = false;
+  const FeatureScreen({super.key, required this.feature});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.amber, foregroundColor: Colors.black, title: const Text('Premium @ Rs.99')),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(25),
-              decoration: BoxDecoration(color: purple, borderRadius: BorderRadius.circular(20)),
-              child: Column(
-                children: [
-                  const Icon(Icons.workspace_premium, color: Colors.amber, size: 60),
-                  const SizedBox(height: 10),
-                  Text(widget.optionName != null ? '${widget.optionName} is Premium!' : 'Get Premium Access!', style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  const Text('Unlock all 38 Districts Jobs, Bus Booking, Recharge', textAlign: TextAlign.center, style: TextStyle(color: Colors.white70)),
-                ],
+      appBar: AppBar(title: Text(feature.title)),
+      body: ListView(
+        padding: const EdgeInsets.all(18),
+        children: [
+          Container(
+            padding: const EdgeInsets.all(22),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [brandPurple, Color(0xFF9575CD)],
+              ),
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(feature.icon, size: 48, color: Colors.white),
+                const SizedBox(height: 13),
+                Text(feature.title,
+                    style: const TextStyle(
+                        color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 6),
+                Text(feature.subtitle, style: const TextStyle(color: Colors.white70)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 22),
+          const Text('Available options',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 9),
+          ...feature.services.map(
+            (service) => Card(
+              color: Colors.white,
+              elevation: 0,
+              child: ListTile(
+                leading: const CircleAvatar(
+                  backgroundColor: Color(0xFFEDE7F6),
+                  child: Icon(Icons.arrow_forward_rounded, color: brandPurple),
+                ),
+                title: Text(service.title,
+                    style: const TextStyle(fontWeight: FontWeight.w600)),
+                subtitle: Text(service.description),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => showDialog<void>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text(service.title),
+                    content: Text(
+                      '${service.description}\n\nThis starter screen does not connect to an external provider yet.',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-            const SizedBox(height: 20),
-            const ListTile(leading: Icon(Icons.check, color: Colors.green), title: Text('Unlimited TN Jobs - 38 Districts')),
-            const ListTile(leading: Icon(Icons.check, color: Colors.green), title: Text('Daily WhatsApp Job Alerts')),
-            const ListTile(leading: Icon(Icons.check, color: Colors.green), title: Text('Direct HR Numbers')),
-            const ListTile(leading: Icon(Icons.check, color: Colors.green), title: Text('No Ads')),
-            const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: purple, padding: const EdgeInsets.all(18), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                onPressed: isPaying ? null : () async {
-                  setState(() => isPaying = true);
-                  // RAZORPAY PAYMENT SIMULATION - REAL LA RAZORPAY CODE VARUM
-                  await Future.delayed(const Duration(seconds: 2));
-                  isUserPremium = true;
-                  setState(() => isPaying = false);
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(backgroundColor: Colors.green, content: Text('Payment Success! Rs.99 - Premium Activated! You earned Rs.99!')));
-                  Navigator.pop(context);
-                  setState(() {});
-                },
-                child: Text(isPaying ? 'Processing UPI Payment...' : 'PAY Rs.99 VIA UPI / GPay (Razorpay)', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-              ),
-            ),
-            const SizedBox(height: 10),
-            const Text('Secure Payment by Razorpay - UPI, GPay, PhonePe', style: TextStyle(fontSize: 11, color: Colors.grey)),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class AdvertisementBox extends StatelessWidget {
-  const AdvertisementBox({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // AD CLICK EARNING
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(backgroundColor: purple, content: Text('Ad Clicked! You earned Rs.5 from AdSense! + Affiliate product opening...')),
-        );
-      },
-      child: Container(
-        width: double.infinity,
-        height: 90,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.black12),
-          boxShadow: [BoxShadow(color: purple.withOpacity(0.1), blurRadius: 8)],
-        ),
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.campaign, color: purple, size: 28), SizedBox(width: 8), Text('ADVERTISEMENT - CLICK TO EARN', style: TextStyle(color: purple, fontWeight: FontWeight.bold, fontSize: 12))]),
-            SizedBox(height: 4),
-            Text('Google AdSense + Affiliate Products - Rs.5 per click', style: TextStyle(color: Colors.black45, fontSize: 11)),
-          ],
-        ),
-      ),
-    );
-  }
-}
+          ),
+          if (feature.partnerLinks) ...[
+            const SizedBox(height: 12),
+            const Card(
+              color: Color(0xFFE0F2F1),
+              elevation: 0,
+           
