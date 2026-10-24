@@ -1,0 +1,6 @@
+arjun_mastermind
+ ├── assets
+ │    └── logo.png
+ ├── lib
+ │    └── main.dart
+ └── pubspec.yaml
