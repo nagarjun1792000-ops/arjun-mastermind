@@ -2,162 +2,168 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void main() => runApp(const ArjunMastermindApp());
+const brandPurple = Color(0xFF673AB7);
+const pageBg = Color(0xFFF6F4FB);
 
-const Color brandPurple = Color(0xFF5E35B1);
-const Color pageBg = Color(0xFFF7F5FC);
-bool isPremium = false;
+class Service {
+  final String title, subtitle;
+  final IconData icon;
+  final List<ServiceLink> links;
+  const Service(this.title, this.subtitle, this.icon, this.links);
+}
+class ServiceLink {
+  final String title, url, description;
+  const ServiceLink(this.title, this.url, this.description);
+}
+
+const services = <Service>[
+  Service('Games', 'Online games and gaming discovery', Icons.sports_esports, [
+    ServiceLink('Browser games', 'https://www.google.com/search?q=free+browser+games', 'Find browser games.'),
+    ServiceLink('Puzzle games', 'https://www.google.com/search?q=free+online+puzzle+games', 'Find puzzle games.'),
+  ]),
+  Service('Food Order', 'Discover restaurants and food delivery', Icons.restaurant, [
+    ServiceLink('Swiggy', 'https://www.swiggy.com/', 'Open food delivery.'),
+    ServiceLink('Zomato', 'https://www.zomato.com/', 'Browse restaurants.'),
+  ]),
+  Service('Dress Order', 'Clothing and fashion shopping', Icons.checkroom, [
+    ServiceLink('Myntra', 'https://www.myntra.com/', 'Open fashion shopping.'),
+    ServiceLink('AJIO', 'https://www.ajio.com/', 'Browse clothes and accessories.'),
+  ]),
+  Service('Jobs', 'Search jobs and career opportunities', Icons.work, [
+    ServiceLink('National Career Service', 'https://www.ncs.gov.in/', 'Government job portal.'),
+    ServiceLink('LinkedIn Jobs', 'https://www.linkedin.com/jobs/', 'Search job listings.'),
+  ]),
+  Service('Movies', 'Tamil, Malayalam, Hindi and Hollywood movies', Icons.movie, [
+    ServiceLink('JustWatch India', 'https://www.justwatch.com/in', 'Find legal streaming options.'),
+    ServiceLink('BookMyShow', 'https://in.bookmyshow.com/', 'Explore cinema listings and tickets.'),
+    ServiceLink('Tamil movies', 'https://www.google.com/search?q=Tamil+movies+official+streaming', 'Find official streaming options.'),
+    ServiceLink('Malayalam movies', 'https://www.google.com/search?q=Malayalam+movies+official+streaming', 'Find official streaming options.'),
+    ServiceLink('Hindi movies', 'https://www.google.com/search?q=Hindi+movies+official+streaming', 'Find official streaming options.'),
+    ServiceLink('Hollywood movies', 'https://www.google.com/search?q=Hollywood+movies+official+streaming+India', 'Find official streaming options.'),
+  ]),
+  Service('Travel Booking', 'Plan trips and compare travel options', Icons.flight_takeoff, [
+    ServiceLink('IRCTC', 'https://www.irctc.co.in/', 'Official railway ticket booking.'),
+    ServiceLink('RedBus', 'https://www.redbus.in/', 'Explore bus tickets.'),
+    ServiceLink('MakeMyTrip', 'https://www.makemytrip.com/', 'Explore travel booking.'),
+  ]),
+  Service('Books', 'Find books and reading resources', Icons.menu_book, [
+    ServiceLink('Google Books', 'https://books.google.com/', 'Discover books and previews.'),
+    ServiceLink('Project Gutenberg', 'https://www.gutenberg.org/', 'Read public-domain ebooks.'),
+  ]),
+  Service('World News', 'Read current news from trusted sources', Icons.public, [
+    ServiceLink('BBC News', 'https://www.bbc.com/news', 'Open international news.'),
+    ServiceLink('Reuters', 'https://www.reuters.com/world/', 'Open world news.'),
+    ServiceLink('The Hindu', 'https://www.thehindu.com/', 'Read Indian and international news.'),
+  ]),
+  Service('Mobile Recharge', 'Open recharge and bill payment services', Icons.phone_android, [
+    ServiceLink('Airtel', 'https://www.airtel.in/recharge', 'Open Airtel recharge.'),
+    ServiceLink('Jio', 'https://www.jio.com/selfcare/recharge/mobility/', 'Open Jio recharge.'),
+    ServiceLink('Vi', 'https://www.myvi.in/', 'Open Vi services.'),
+    ServiceLink('Bharat BillPay', 'https://www.google.com/search?q=official+Bharat+BillPay', 'Find official bill-payment options.'),
+  ]),
+];
 
 class ArjunMastermindApp extends StatelessWidget {
   const ArjunMastermindApp({super.key});
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Arjun Mastermind',
-      theme: ThemeData(useMaterial3: true, colorScheme: ColorScheme.fromSeed(seedColor: brandPurple), scaffoldBackgroundColor: pageBg),
-      home: const HomeScreen(),
-    );
-  }
+  Widget build(BuildContext context) => MaterialApp(
+    title: 'Arjun Mastermind',
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: brandPurple),
+      scaffoldBackgroundColor: pageBg, useMaterial3: true),
+    home: const HomePage(),
+  );
 }
 
-class AppFeature {
-  final String title; final IconData icon; final List<String> items; final bool premium; final bool partner;
-  const AppFeature(this.title, this.icon, this.items, {this.premium = false, this.partner = false});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+  @override
+  State<HomePage> createState() => _HomePageState();
 }
-
-const List<AppFeature> features = [
-  AppFeature('Games', Icons.sports_esports_rounded, ['Online Games','Puzzle Games','Action Games']),
-  AppFeature('Food Order', Icons.restaurant_rounded, ['Restaurants','Food Menu','Order Food'], partner: true),
-  AppFeature('Movies', Icons.movie_creation_rounded, ['Tamil Movies','Hindi Movies','Movie Booking'], partner: true),
-  AppFeature('Jobs', Icons.work_rounded, ['Private Jobs','Govt Jobs','Work From Home'], premium: true),
-  AppFeature('Travel', Icons.directions_bus_rounded, ['Bus Booking','Train Info','Hotels'], partner: true),
-  AppFeature('Dress Order', Icons.checkroom_rounded, ['Men Fashion','Women Fashion','Kids Fashion'], partner: true),
-  AppFeature('Books', Icons.menu_book_rounded, ['Tamil Books','English Books','Story Books'], partner: true),
-  AppFeature('World News', Icons.public_rounded, ['India News','World News','Tech News']),
-  AppFeature('Recharge', Icons.phone_android_rounded, ['Mobile Recharge','DTH','EB Bills'], premium: true),
-];
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class _HomePageState extends State<HomePage> {
+  String query = '';
   @override
   Widget build(BuildContext context) {
+    final shown = services.where((s) =>
+      s.title.toLowerCase().contains(query.toLowerCase()) ||
+      s.subtitle.toLowerCase().contains(query.toLowerCase()) ||
+      s.links.any((l) => l.title.toLowerCase().contains(query.toLowerCase()))).toList();
     return Scaffold(
+      appBar: AppBar(backgroundColor: brandPurple, foregroundColor: Colors.white,
+        title: const Text('Arjun Mastermind', style: TextStyle(fontWeight: FontWeight.bold)),
+        actions: [IconButton(icon: const Icon(Icons.info_outline), onPressed: () => showAboutDialog(
+          context: context, applicationName: 'Arjun Mastermind',
+          children: const [Text('This starter opens service websites. External providers manage their own accounts, terms and payments.')]))]),
       body: CustomScrollView(slivers: [
-        SliverToBoxAdapter(child: Container(
-          padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 20, 20, 24),
-          decoration: const BoxDecoration(gradient: LinearGradient(colors: [Color(0xFF4527A0), Color(0xFF7E57C2)]), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(28), bottomRight: Radius.circular(28))),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(children: [
-              Container(width: 54, height: 54, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)), child: const Icon(Icons.auto_awesome, color: brandPurple, size: 32)),
-              const SizedBox(width: 12),
-              const Expanded(child: Text('ARJUN MASTERMIND\nYour World. One App.', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
-              if (!isPremium) GestureDetector(onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PremiumScreen())), child: Container(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6), decoration: BoxDecoration(color: Colors.amber, borderRadius: BorderRadius.circular(12)), child: const Text('Rs.99', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)))),
-            ]),
-            const SizedBox(height: 18),
-            TextField(decoration: InputDecoration(hintText: 'Search...', prefixIcon: const Icon(Icons.search, color: brandPurple), filled: true, fillColor: Colors.white, border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none))),
-          ]),
-        )),
-        SliverPadding(padding: const EdgeInsets.all(16), sliver: SliverGrid(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 12, mainAxisSpacing: 12, childAspectRatio: 0.85),
-          delegate: SliverChildBuilderDelegate((ctx, i) {
-            final f = features[i];
-            return InkWell(onTap: () {
-              if (f.premium && !isPremium) { Navigator.push(ctx, MaterialPageRoute(builder: (_) => PremiumScreen(name: f.title))); return; }
-              Navigator.push(ctx, MaterialPageRoute(builder: (_) => DetailPage(feature: f)));
-            }, child: Container(decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: brandPurple.withOpacity(0.1))), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Icon(f.icon, color: brandPurple, size: 36),
-              const SizedBox(height: 10),
-              Text(f.title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 4),
-              Text(f.premium ? (isPremium ? 'UNLOCKED' : 'PREMIUM') : f.partner ? 'EARN 10%' : 'EXPLORE', style: TextStyle(fontSize: 9, color: f.partner ? Colors.green : Colors.grey, fontWeight: FontWeight.bold)),
-            ])));
-          }, childCount: features.length),
-        )),
-        const SliverPadding(padding: EdgeInsets.all(16), sliver: SliverToBoxAdapter(child: AdBox())),
+        SliverToBoxAdapter(child: Container(width: double.infinity,
+          padding: const EdgeInsets.fromLTRB(20, 24, 20, 22),
+          decoration: const BoxDecoration(gradient: LinearGradient(colors: [brandPurple, Color(0xFF9575CD)]),
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(28))),
+          child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Icon(Icons.auto_awesome, color: Colors.white, size: 42), SizedBox(height: 12),
+            Text('Your World. One App.', style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold)),
+            SizedBox(height: 6), Text('Games • Shopping • Jobs • Movies • Travel • News', style: TextStyle(color: Colors.white70)),
+          ]))),
+        SliverPadding(padding: const EdgeInsets.fromLTRB(16, 18, 16, 8),
+          sliver: SliverToBoxAdapter(child: TextField(onChanged: (v) => setState(() => query = v.trim()),
+            decoration: InputDecoration(hintText: 'Search services...', prefixIcon: const Icon(Icons.search),
+              filled: true, fillColor: Colors.white,
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide.none))))),
+        SliverPadding(padding: const EdgeInsets.all(14), sliver: SliverGrid(
+          delegate: SliverChildBuilderDelegate((context, index) {
+            final service = shown[index];
+            return InkWell(borderRadius: BorderRadius.circular(20),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ServicePage(service: service))),
+              child: Card(color: Colors.white, elevation: 1, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                child: Padding(padding: const EdgeInsets.all(12), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  CircleAvatar(radius: 27, backgroundColor: brandPurple.withOpacity(.10),
+                    child: Icon(service.icon, color: brandPurple, size: 29)),
+                  const SizedBox(height: 12),
+                  Text(service.title, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                  const SizedBox(height: 5), Text('${service.links.length} links', style: const TextStyle(color: Colors.black54, fontSize: 12)),
+                ]))),
+            );
+          }, childCount: shown.length),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 12, crossAxisSpacing: 12, childAspectRatio: 1.02))),
+        const SliverToBoxAdapter(child: Padding(padding: EdgeInsets.fromLTRB(20, 4, 20, 24),
+          child: Text('Note: Orders, bookings, recharge, live data, payments and ad earnings need approved providers and integrations. This starter does not collect payments or guarantee earnings.',
+            style: TextStyle(fontSize: 12, color: Colors.black54)))),
       ]),
     );
   }
 }
 
-class DetailPage extends StatelessWidget {
-  final AppFeature feature;
-  const DetailPage({super.key, required this.feature});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(feature.title), backgroundColor: brandPurple, foregroundColor: Colors.white),
-      body: ListView(padding: const EdgeInsets.all(16), children: [
-        const AdBox(),
-        const SizedBox(height: 12),
-        ...feature.items.map((item) => Card(child: ListTile(
-          leading: const CircleAvatar(backgroundColor: Color(0xFFEDE7F6), child: Icon(Icons.arrow_forward, color: brandPurple)),
-          title: Text(item, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-          subtitle: feature.partner ? const Text('Affiliate - You Earn 10%', style: TextStyle(fontSize: 10, color: Colors.green)) : null,
-          trailing: ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: feature.partner ? Colors.green : brandPurple),
-            onPressed: () async {
-              final link = 'https://www.amazon.in/s?k=${item.replaceAll(' ', '+')}&tag=arjun-21';
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green, content: Text('$item clicked! Earn 10% via $link')));
-              if (await canLaunchUrl(Uri.parse(link))) { await launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication); }
-            },
-            child: Text(feature.partner ? 'BUY' : 'VIEW', style: const TextStyle(color: Colors.white, fontSize: 11)),
-          ),
-        ))),
-        const SizedBox(height: 12),
-        const AdBox(),
-      ]),
-    );
+class ServicePage extends StatelessWidget {
+  final Service service;
+  const ServicePage({super.key, required this.service});
+  Future<void> openLink(BuildContext context, String url) async {
+    try {
+      final ok = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+      if (!ok && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open this link. Try again.')));
+      }
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Check your internet connection and try again.')));
+      }
+    }
   }
-}
-
-class PremiumScreen extends StatefulWidget {
-  final String? name;
-  const PremiumScreen({super.key, this.name});
   @override
-  State<PremiumScreen> createState() => _PremiumScreenState();
-}
-
-class _PremiumScreenState extends State<PremiumScreen> {
-  bool loading = false;
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.name ?? 'Premium'), backgroundColor: Colors.amber, foregroundColor: Colors.black),
-      body: Padding(padding: const EdgeInsets.all(20), child: Column(children: [
-        Container(width: double.infinity, padding: const EdgeInsets.all(20), decoration: BoxDecoration(color: brandPurple, borderRadius: BorderRadius.circular(20)), child: const Column(children: [Icon(Icons.workspace_premium, color: Colors.amber, size: 60), SizedBox(height: 10), Text('Premium @ Rs.99', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold))])),
-        const SizedBox(height: 20),
-        const ListTile(leading: Icon(Icons.check_circle, color: Colors.green), title: Text('38 Districts Jobs Unlocked', style: TextStyle(fontSize: 13))),
-        const ListTile(leading: Icon(Icons.check_circle, color: Colors.green), title: Text('Earn 20% Affiliate Commission', style: TextStyle(fontSize: 13))),
-        const Spacer(),
-        SizedBox(width: double.infinity, child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: brandPurple, padding: const EdgeInsets.all(16)), onPressed: loading ? null : () async { setState(() => loading = true); await Future.delayed(const Duration(seconds: 2)); isPremium = true; setState(() => loading = false); if (mounted) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(backgroundColor: Colors.green, content: Text('Premium Active! Rs.99 Success!'))); Navigator.pop(context); } }, child: Text(loading ? 'Processing...' : 'PAY Rs.99 UPI / GPay', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)))),
-        const SizedBox(height: 12),
-        const AdBox(),
-      ])),
-    );
-  }
-}
-
-class AdBox extends StatelessWidget {
-  const AdBox({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.black12)),
-      child: Column(children: [
-        Container(height: 56, width: double.infinity, decoration: BoxDecoration(color: const Color(0xFFF3E5F5), borderRadius: BorderRadius.circular(12)), child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.campaign, color: brandPurple, size: 20), SizedBox(width: 8), Text('GOOGLE ADSENSE - Rs.5 / click', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: brandPurple))])),
-        const SizedBox(height: 8),
-        SingleChildScrollView(scrollDirection: Axis.horizontal, child: Row(children: [
-          _affChip(context, 'Shirt Rs.799'),
-          _affChip(context, 'Saree Rs.2500'),
-          _affChip(context, 'Book Rs.350'),
-          _affChip(context, 'Bus Rs.650'),
-        ])),
-      ]),
-    );
-  }
-  static Widget _affChip(BuildContext ctx, String name) {
-    return Container(margin: const EdgeInsets.only(right: 8), padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6), decoration: BoxDecoration(color: const Color(0xFFE8F5E9), borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.green.withOpacity(0.3))), child: Row(children: [const Icon(Icons.shopping_bag, size: 14, color: Colors.green), const SizedBox(width: 4), Text(name, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)), const SizedBox(width: 6), Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(8)), child: const Text('BUY', style: TextStyle(fontSize: 8, color: Colors.white)))]));
-  }
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: Text(service.title), backgroundColor: brandPurple, foregroundColor: Colors.white),
+    body: ListView(padding: const EdgeInsets.all(16), children: [
+      Container(padding: const EdgeInsets.all(20), decoration: BoxDecoration(color: brandPurple, borderRadius: BorderRadius.circular(22)),
+        child: Row(children: [Icon(service.icon, size: 42, color: Colors.white), const SizedBox(width: 14),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(service.title, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 5), Text(service.subtitle, style: const TextStyle(color: Colors.white70)),
+          ]))])),
+      const SizedBox(height: 18),
+      for (final link in service.links) Card(color: Colors.white, child: ListTile(
+        leading: const CircleAvatar(child: Icon(Icons.open_in_new)),
+        title: Text(link.title, style: const TextStyle(fontWeight: FontWeight.w600)),
+        subtitle: Text(link.description), trailing: const Icon(Icons.chevron_right),
+        onTap: () => openLink(context, link.url))),
+    ]),
+  );
 }
