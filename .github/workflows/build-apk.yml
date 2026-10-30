@@ -3,28 +3,38 @@ on:
   push:
     branches: [ main, master ]
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
+          
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.19.6'
           channel: 'stable'
+
       - name: Create android folder
-        run: flutter create . --platforms=android --project-name arjun_mastermind --overwrite
+        run: |
+          mv lib/main.dart /tmp/main_backup.dart
+          flutter create . --platforms=android --project-name arjun_mastermind --overwrite
+          mv /tmp/main_backup.dart lib/main.dart
+
       - name: Copy google-services
         run: |
           if [ -f google-services.json ]; then
             cp google-services.json android/app/google-services.json
           fi
+          
       - run: flutter pub get
       - run: flutter build apk --release
+      
       - uses: actions/upload-artifact@v4
         with:
           name: arjun-mastermind-apk
