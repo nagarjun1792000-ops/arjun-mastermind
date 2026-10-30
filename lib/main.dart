@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-void main() => runApp(const ArjunMastermindApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
+  runApp(const ArjunMastermindApp());
+}
 
 const brandPurple = Color(0xFF673AB7);
 const pageBg = Color(0xFFF6F4FB);
@@ -20,7 +25,7 @@ class ServiceLink {
 
 const services = <Service>[
   Service('Games', 'Online games and gaming discovery', Icons.sports_esports, [
-    ServiceLink('Browser games', 'https://www.google.com/search?q=free+browser+games', 'Find browser games.'),
+    ServiceLink('Browser games', 'https://www.google.com/search?q=free+browser+games', 'Find browser games'),
   ]),
   Service('Food Order', 'Discover restaurants and food delivery', Icons.restaurant, [
     ServiceLink('Swiggy', 'https://www.swiggy.com/', 'Open food delivery.'),
@@ -35,8 +40,8 @@ const services = <Service>[
     ServiceLink('LinkedIn Jobs', 'https://www.linkedin.com/jobs/', 'Search job listings.'),
   ]),
   Service('Movies', 'Tamil, Malayalam, Hindi and Hollywood movies', Icons.movie, [
-    ServiceLink('JustWatch India', 'https://www.justwatch.com/in', 'Find legal streaming options.'),
-    ServiceLink('BookMyShow', 'https://in.bookmyshow.com/', 'Explore cinema listings and tickets.'),
+    ServiceLink('JustWatch India', 'https://www.justwatch.com/in', 'Find legal streaming options'),
+    ServiceLink('BookMyShow', 'https://in.bookmyshow.com/', 'Explore cinema listings and tickets'),
   ]),
   Service('Travel Booking', 'Plan trips and compare travel options', Icons.flight_takeoff, [
     ServiceLink('IRCTC', 'https://www.irctc.co.in/', 'Official railway ticket booking.'),
@@ -53,7 +58,7 @@ const services = <Service>[
     ServiceLink('The Hindu', 'https://www.thehindu.com/', 'Read Indian and international news.'),
   ]),
   Service('Mobile Recharge', 'Open recharge and bill payment services', Icons.phone_android, [
-    ServiceLink('Airtel', 'https://www.airtel.in/recharge', 'Open Airtel recharge.'),
+    ServiceLink('Airtel', 'https://www.airtel.in/recharge/', 'Open Airtel recharge.'),
     ServiceLink('Jio', 'https://www.jio.com/selfcare/recharge/mobility/', 'Open Jio recharge.'),
     ServiceLink('Vi', 'https://www.myvi.in/', 'Open Vi services.'),
   ]),
@@ -87,7 +92,7 @@ class _HomePageState extends State<HomePage> {
     final shown = services.where((s) =>
       s.title.toLowerCase().contains(query.toLowerCase()) ||
       s.subtitle.toLowerCase().contains(query.toLowerCase())).toList();
-    
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: brandPurple,
@@ -112,46 +117,46 @@ class _HomePageState extends State<HomePage> {
           IconButton(icon: const Icon(Icons.info_outline), onPressed: () => showAboutDialog(
             context: context,
             applicationName: 'Arjun Mastermind',
-            children: const [Text('Your World. One App. - Arjun Mastermind\nAll services in one place.')],
-          ))
+            children: const [Text('Your World. One App. - Arjun Mastermind\nAll services in one place')],
+          )),
         ],
       ),
       body: CustomScrollView(slivers: [
-        // FINAL LOGO HEADER - HD NO TAGLINE LOGO
-        SliverToBoxAdapter(child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF0A1931), Color(0xFF1A237E), Color(0xFF673AB7)],
-              begin: Alignment.topLeft, end: Alignment.bottomRight),
-            borderRadius: BorderRadius.vertical(bottom: Radius.circular(32)),
-          ),
-          child: Column(children: [
-            // YOUR HD LOGO - FULL CIRCLE
-            Container(
-              width: 220, height: 220,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Color(0xFFFFC107), width: 4),
-                boxShadow: [
-                  BoxShadow(color: Color(0xFFFFC107).withOpacity(0.9), blurRadius: 30, spreadRadius: 2),
-                  BoxShadow(color: Colors.blue.withOpacity(0.4), blurRadius: 40),
-                ],
-              ),
-              child: ClipOval(
-                child: Image.asset('assets/logo.png', fit: BoxFit.cover,
-                  errorBuilder: (c,e,s)=> Container(color: Colors.white, child: const Icon(Icons.person, size: 80, color: brandPurple))),
-              ),
+        SliverToBoxAdapter(
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF0A1931), Color(0xFF1A237E), Color(0xFF673AB7)],
+                begin: Alignment.topLeft, end: Alignment.bottomRight),
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(32)),
             ),
-            const SizedBox(height: 16),
-            const Text('Your World. One App.',
-              style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 6),
-            const Text('Games • Food • Fashion • Jobs • Movies • Travel • Books • News • Recharge',
-              style: TextStyle(color: Colors.white70, fontSize: 11), textAlign: TextAlign.center),
-          ]),
-        )),
+            child: Column(children: [
+              Container(
+                width: 220, height: 220,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Color(0xFFFFC107), width: 4),
+                  boxShadow: [
+                    BoxShadow(color: Color(0xFFFFC107).withOpacity(0.9), blurRadius: 30, spreadRadius: 2),
+                    BoxShadow(color: Colors.blue.withOpacity(0.4), blurRadius: 40),
+                  ],
+                ),
+                child: ClipOval(
+                  child: Image.asset('assets/logo.png', fit: BoxFit.cover,
+                    errorBuilder: (c,e,s)=> Container(color: Colors.white, child: const Icon(Icons.auto_awesome, size: 50))),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text('Your World. One App.',
+                style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 6),
+              const Text('Games • Food • Fashion • Jobs • Movies • Travel • Books • News • Recharge',
+                style: TextStyle(color: Colors.white70, fontSize: 11), textAlign: TextAlign.center),
+            ]),
+          ),
+        ),
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(16, 18, 16, 8),
           sliver: SliverToBoxAdapter(child: TextField(
@@ -165,7 +170,7 @@ class _HomePageState extends State<HomePage> {
           )),
         ),
         SliverPadding(
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.all(12),
           sliver: SliverGrid(
             delegate: SliverChildBuilderDelegate((context, index) {
               final service = shown[index];
@@ -181,19 +186,20 @@ class _HomePageState extends State<HomePage> {
                       CircleAvatar(radius: 27, backgroundColor: brandPurple.withOpacity(.10),
                         child: Icon(service.icon, color: brandPurple, size: 29)),
                       const SizedBox(height: 12),
-                      Text(service.title, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                      Text(service.title, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold)),
                       const SizedBox(height: 5),
-                      Text('${service.links.length} links', style: const TextStyle(color: Colors.black54, fontSize: 12)),
+                      Text('${service.links.length} links', style: const TextStyle(color: Colors.grey, fontSize: 12)),
                     ]),
                   ),
                 ),
               );
             }, childCount: shown.length),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, mainAxisSpacing: 12, crossAxisSpacing: 12, childAspectRatio: 1.02),
+              crossAxisCount: 2, mainAxisSpacing: 12, crossAxisSpacing: 12, childAspectRatio: 1.1),
           ),
         ),
       ]),
+      bottomNavigationBar: const BannerAdWidget(),
     );
   }
 }
@@ -201,20 +207,20 @@ class _HomePageState extends State<HomePage> {
 class ServicePage extends StatelessWidget {
   final Service service;
   const ServicePage({super.key, required this.service});
-  
+
   Future<void> openLink(BuildContext context, String url) async {
     try {
       final ok = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
       if (!ok && context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open this link. Try again.')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open link')));
       }
     } catch (_) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Check your internet connection and try again.')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Check your internet')));
       }
     }
   }
-  
+
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(title: Text(service.title), backgroundColor: brandPurple, foregroundColor: Colors.white),
@@ -245,5 +251,59 @@ class ServicePage extends StatelessWidget {
           ),
         ),
     ]),
+    bottomNavigationBar: const BannerAdWidget(),
   );
+}
+
+// ===== ADMOB BANNER WIDGET =====
+class BannerAdWidget extends StatefulWidget {
+  const BannerAdWidget({super.key});
+  @override
+  State<BannerAdWidget> createState() => _BannerAdWidgetState();
+}
+
+class _BannerAdWidgetState extends State<BannerAdWidget> {
+  BannerAd? _bannerAd;
+  bool _isLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAd();
+  }
+
+  void _loadAd() {
+    _bannerAd = BannerAd(
+      adUnitId: 'ca-app-pub-3940256099942544/6300978111', // TEST ID - Real ID later maathanum
+      request: const AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (_) => setState(() => _isLoaded = true),
+        onAdFailedToLoad: (ad, err) {
+          ad.dispose();
+          debugPrint('Ad failed: $err');
+        },
+      ),
+    )..load();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_isLoaded || _bannerAd == null) {
+      return const SizedBox(height: 0);
+    }
+    return SafeArea(
+      child: SizedBox(
+        width: _bannerAd!.size.width.toDouble(),
+        height: _bannerAd!.size.height.toDouble(),
+        child: AdWidget(ad: _bannerAd!),
+      ),
+    );
+  }
 }
