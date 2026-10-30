@@ -1,26 +1,21 @@
 name: arjun_mastermind
-description: Arjun Mastermind - Your World One App
+description: Arjun Mastermind App with AdMob
 publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
-  flutter: '>=3.10.0'
+  sdk: '>=3.2.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
-  url_launcher: ^6.2.2
-  google_mobile_ads: ^4.0.0
+  cupertino_icons: ^1.0.6
+  google_mobile_ads: ^5.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.0
 
 flutter:
   uses-material-design: true
-  assets:
-    - assets/logo.png
-    - logo.png
