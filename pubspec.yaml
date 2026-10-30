@@ -1,5 +1,5 @@
 name: arjun_mastermind
-description: Arjun Mastermind App with AdMob
+description: Tamil-first Namma Ooru all-in-one Flutter super app
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -11,6 +11,10 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.6
   google_mobile_ads: ^3.1.0
+  google_fonts: ^6.1.0
+  url_launcher: ^6.2.2
+  share_plus: ^7.2.1
+  firebase_core: ^2.24.0
 
 dev_dependencies:
   flutter_test:
@@ -19,3 +23,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - logo.png
