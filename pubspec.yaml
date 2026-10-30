@@ -1,5 +1,5 @@
 name: arjun_mastermind
-description: Tamil-first Namma Ooru all-in-one Flutter super app
+description: Arjun Mastermind - Namma Ooru All-in-One Super App - Games, Food, Jobs, Movies, News, Services
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -20,6 +20,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  assets:
-    - assets/
-    - logo.png
