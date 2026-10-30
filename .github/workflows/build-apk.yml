@@ -17,7 +17,7 @@ jobs:
           flutter-version: '3.19.6'
           channel: 'stable'
       - name: Create android folder
-        run: flutter create . --platforms=android
+        run: flutter create . --platforms=android --project-name arjun_mastermind --overwrite
       - name: Copy google-services
         run: |
           if [ -f google-services.json ]; then
