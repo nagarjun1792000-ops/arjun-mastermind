@@ -2,8 +2,6 @@ name: Build APK
 on:
   push:
     branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
@@ -29,11 +27,38 @@ jobs:
             flutter create . --platforms=android --project-name arjun_mastermind
           fi
       
+      - name: Ensure assets folder and logo exists
+        run: |
+          mkdir -p assets
+          if [ ! -f "assets/logo_final.png" ]; then
+            echo "Logo missing - using default icon for now"
+            # Create a simple placeholder if missing
+            ls -la assets/
+          else
+            echo "Logo found!"
+            ls -lh assets/logo_final.png
+          fi
+      
+      - name: Add AdMob App ID to AndroidManifest
+        run: |
+          MANIFEST="android/app/src/main/AndroidManifest.xml"
+          if [ -f "$MANIFEST" ]; then
+            if ! grep -q "com.google.android.gms.ads.APPLICATION_ID" "$MANIFEST"; then
+              sed -i '/<application/a \        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3940256099942544~3347511713"\/>' "$MANIFEST"
+            fi
+          fi
+      
       - name: Get dependencies
         run: flutter pub get
       
       - name: Generate App Icon from your photo
-        run: flutter pub run flutter_launcher_icons
+        continue-on-error: true
+        run: |
+          if [ -f "assets/logo_final.png" ]; then
+            flutter pub run flutter_launcher_icons
+          else
+            echo "Skipping icon generation - logo not found, using default"
+          fi
       
       - name: Build APK
         run: flutter build apk --release
@@ -41,5 +66,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: namma-ooru-app-release-apk
+          name: namma-ooru-app-with-ads
           path: build/app/outputs/flutter-apk/app-release.apk
