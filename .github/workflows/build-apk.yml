@@ -2,40 +2,38 @@ name: Build APK
 on:
   push:
     branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
       
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-          
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.6'
+          flutter-version: '3.19.0'
           channel: 'stable'
-
-      - name: Create android folder
-        run: |
-          mv lib/main.dart /tmp/main_backup.dart
-          flutter create . --platforms=android --project-name arjun_mastermind --overwrite
-          mv /tmp/main_backup.dart lib/main.dart
-
-      - name: Copy google-services
-        run: |
-          if [ -f google-services.json ]; then
-            cp google-services.json android/app/google-services.json
-          fi
-          
-      - run: flutter pub get
-      - run: flutter build apk --release
       
-      - uses: actions/upload-artifact@v4
+      - name: Create Android folder if missing
+        run: |
+          if [ ! -d "android" ]; then
+            flutter create . --platforms=android
+          fi
+      
+      - name: Get dependencies
+        run: flutter pub get
+      
+      - name: Generate App Icon from your photo
+        run: flutter pub run flutter_launcher_icons
+      
+      - name: Build APK
+        run: flutter build apk --release
+      
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
         with:
-          name: arjun-mastermind-apk
+          name: namma-ooru-app-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
