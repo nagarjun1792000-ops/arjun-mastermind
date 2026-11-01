@@ -23,7 +23,6 @@ jobs:
       
       - name: Fix Android folder and Manifest
         run: |
-          # Manifest odanja iruntha android folder ah delete panni pudhusa create pannum
           MANIFEST="android/app/src/main/AndroidManifest.xml"
           if [ -f "$MANIFEST" ]; then
             if ! python3 -m xml.dom.minidom "$MANIFEST" > /dev/null 2>&1; then
@@ -34,7 +33,6 @@ jobs:
           if [ ! -d "android" ]; then
             flutter create . --platforms=android --project-name arjun_mastermind
           fi
-          # AdMob ID ah correct ah insert pannum python la
           python3 << 'PY'
           import pathlib
           path = pathlib.Path("android/app/src/main/AndroidManifest.xml")
@@ -42,21 +40,33 @@ jobs:
           if "com.google.android.gms.ads.APPLICATION_ID" not in text:
               text = text.replace("</application>", '        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3940256099942544~3347511713"/>\n        </application>')
               path.write_text(text)
-              print("AdMob ID added safely")
-          else:
-              print("AdMob ID already exists")
           PY
-          cat "$MANIFEST"
       
-      - name: Ensure assets folder exists
+      - name: Ensure assets and logo exists - CREATE IF MISSING
         run: |
           mkdir -p assets
-          if [ -f "assets/logo_final.png" ]; then
-            echo "Logo exists - OK"
-            ls -lh assets/logo_final.png
+          if [ ! -f "assets/logo_final.png" ]; then
+            echo "Logo NOT found - creating placeholder blue-gold logo"
+            pip install Pillow -q
+            python3 << 'PY'
+          from PIL import Image, ImageDraw
+          img = Image.new('RGB', (512, 512), color=(10, 25, 78))
+          draw = ImageDraw.Draw(img)
+          # Gold circle
+          draw.ellipse([50, 50, 462, 462], outline=(255, 215, 0), width=15)
+          draw.ellipse([100, 100, 412, 412], fill=(255, 215, 0))
+          # AM text - simple
+          try:
+              draw.text((150, 180), "AM", fill=(10,25,78), font_size=180)
+          except:
+              draw.text((150, 180), "AM", fill=(10,25,78))
+          img.save("assets/logo_final.png")
+          print("Placeholder logo created")
+          PY
           else
-            echo "Logo missing - will use default icon"
+            echo "Logo found!"
           fi
+          ls -lh assets/
       
       - name: Get dependencies
         run: flutter pub get
@@ -64,11 +74,7 @@ jobs:
       - name: Generate App Icon
         continue-on-error: true
         run: |
-          if [ -f "assets/logo_final.png" ]; then
-            flutter pub run flutter_launcher_icons || echo "Icon generation skipped"
-          else
-            echo "No logo, skipping icon generation"
-          fi
+          flutter pub run flutter_launcher_icons || echo "Icon gen skipped"
       
       - name: Build APK
         run: flutter build apk --release
