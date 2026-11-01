@@ -47,7 +47,14 @@ class _SplashScreenState extends State<SplashScreen> {
             ClipRRect(
               borderRadius: BorderRadius.circular(30),
               child: Image.asset('assets/logo_final.png', width: 180, height: 180, fit: BoxFit.cover,
-                errorBuilder: (c,e,s) => Container(width:180,height:180,decoration:BoxDecoration(color:const Color(0xFF0A194E),borderRadius:BorderRadius.circular(30),border:Border.all(color:const Color(0xFFFFD700),width:3)),child:const Center(child:Text('AM',style:TextStyle(color:Color(0xFFFFD700),fontSize:50,fontWeight:FontWeight.bold)))),
+                errorBuilder: (c,e,s) {
+                  return Container(
+                    width: 180,
+                    height: 180,
+                    decoration: BoxDecoration(color: const Color(0xFF0A194E), borderRadius: BorderRadius.circular(30), border: Border.all(color: const Color(0xFFFFD700), width: 3)),
+                    child: const Center(child: Text('AM', style: TextStyle(color: Color(0xFFFFD700), fontSize: 50, fontWeight: FontWeight.bold))),
+                  );
+                },
               ),
             ),
             const SizedBox(height: 20),
@@ -99,18 +106,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  final List<Map<String, dynamic>> features = [
-    {'title': 'Games', 'icon': Icons.sports_esports, 'color': Colors.purple, 'screen': const GamesScreen()},
-    {'title': 'Food', 'icon': Icons.restaurant, 'color': Colors.orange, 'screen': const FoodScreen()},
-    {'title': 'Fashion', 'icon': Icons.checkroom, 'color': Colors.pink, 'screen': const FashionScreen()},
-    {'title': 'Jobs', 'icon': Icons.work, 'color': Colors.blue, 'screen': const JobsScreen()},
-    {'title': 'Movies', 'icon': Icons.movie, 'color': Colors.red, 'screen': const MoviesScreen()},
-    {'title': 'Travel', 'icon': Icons.flight, 'color': Colors.teal, 'screen': const TravelScreen()},
-    {'title': 'Books', 'icon': Icons.menu_book, 'color': Colors.brown, 'screen': const BooksScreen()},
-    {'title': 'News', 'icon': Icons.newspaper, 'color': Colors.indigo, 'screen': const NewsScreen()},
-    {'title': 'Recharge', 'icon': Icons.phone_android, 'color': Colors.green, 'screen': const RechargeScreen()},
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,54 +117,37 @@ class _HomeScreenState extends State<HomeScreen> {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.asset('assets/logo_final.png', width: 40, height: 40, fit: BoxFit.cover,
-                errorBuilder: (c,e,s) => const Text('AM', style: TextStyle(color: Color(0xFFFFD700))),
+                errorBuilder: (c,e,s) {
+                  return const Text('AM', style: TextStyle(color: Color(0xFFFFD700)));
+                },
               ),
             ),
             const SizedBox(width: 10),
             const Text('Arjun Mastermind', style: TextStyle(color: Color(0xFFFFD700), fontWeight: FontWeight.bold, fontSize: 18)),
           ],
         ),
-        elevation: 0,
       ),
       body: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            color: const Color(0xFF0A194E),
-            child: const Row(
-              children: [
-                Icon(Icons.verified_user, color: Color(0xFFFFD700)),
-                SizedBox(width: 8),
-                Text('All 9 Features Working!', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-              ],
-            ),
-          ),
+          Container(padding: const EdgeInsets.all(12), color: const Color(0xFF0A194E), child: const Row(children: [Icon(Icons.verified_user, color: Color(0xFFFFD700)), SizedBox(width: 8), Text('All 9 Features Working!', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold))])),
           Expanded(
-            child: GridView.builder(
+            child: GridView.count(
               padding: const EdgeInsets.all(16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.9, crossAxisSpacing: 12, mainAxisSpacing: 12),
-              itemCount: features.length,
-              itemBuilder: (c, i) {
-                final f = features[i];
-                return GestureDetector(
-                  onTap: () => Navigator.push(c, MaterialPageRoute(builder: (_) => f['screen'] as Widget)),
-                  child: Container(
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: (f['color'] as Color).withOpacity(0.2), blurRadius: 8, offset: const Offset(0,4))]),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(color: (f['color'] as Color).withOpacity(0.15), shape: BoxShape.circle),
-                          child: Icon(f['icon'] as IconData, color: f['color'] as Color, size: 32),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(f['title'] as String, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                      ],
-                    ),
-                  ),
-                );
-              },
+              crossAxisCount: 3,
+              childAspectRatio: 0.9,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              children: [
+                homeCard(context, 'Games', Icons.sports_esports, Colors.purple, const GamesScreen()),
+                homeCard(context, 'Food', Icons.restaurant, Colors.orange, const FoodScreen()),
+                homeCard(context, 'Fashion', Icons.checkroom, Colors.pink, const FashionScreen()),
+                homeCard(context, 'Jobs', Icons.work, Colors.blue, const JobsScreen()),
+                homeCard(context, 'Movies', Icons.movie, Colors.red, const MoviesScreen()),
+                homeCard(context, 'Travel', Icons.flight, Colors.teal, const TravelScreen()),
+                homeCard(context, 'Books', Icons.menu_book, Colors.brown, const BooksScreen()),
+                homeCard(context, 'News', Icons.newspaper, Colors.indigo, const NewsScreen()),
+                homeCard(context, 'Recharge', Icons.phone_android, Colors.green, const RechargeScreen()),
+              ],
             ),
           ),
           if (isReady && bannerAd != null)
@@ -183,8 +161,28 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  Widget homeCard(BuildContext ctx, String title, IconData icon, Color color, Widget screen) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(ctx, MaterialPageRoute(builder: (c) => screen));
+      },
+      child: Container(
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: color.withOpacity(0.2), blurRadius: 8, offset: const Offset(0,4))]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withOpacity(0.15), shape: BoxShape.circle), child: Icon(icon, color: color, size: 32)),
+            const SizedBox(height: 8),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
+// GAMES
 class GamesScreen extends StatefulWidget {
   const GamesScreen({super.key});
   @override
@@ -214,14 +212,25 @@ class _GamesScreenState extends State<GamesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Games - TicTacToe'), backgroundColor: Colors.purple),
+      appBar: AppBar(title: const Text('Games'), backgroundColor: Colors.purple),
       body: Column(
         children: [
           const SizedBox(height: 20),
           Text(winner == '' ? 'Turn: $turn' : winner == 'Draw' ? 'Draw!' : 'Winner: $winner', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 20),
-          Expanded(child: GridView.builder(padding: const EdgeInsets.all(20), gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3), itemCount: 9, itemBuilder: (c,i) => GestureDetector(onTap: () => tap(i), child: Container(margin: const EdgeInsets.all(4), decoration: BoxDecoration(border: Border.all(width: 2), borderRadius: BorderRadius.circular(8)), child: Center(child: Text(board[i], style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold))))))),
-          ElevatedButton(onPressed: () => setState(() { board = List.filled(9, ''); winner = ''; turn = 'X'; }), child: const Text('Restart Game')),
+          Expanded(
+            child: GridView.builder(
+              padding: const EdgeInsets.all(20),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+              itemCount: 9,
+              itemBuilder: (c,i) {
+                return GestureDetector(
+                  onTap: () { tap(i); },
+                  child: Container(margin: const EdgeInsets.all(4), decoration: BoxDecoration(border: Border.all(width: 2), borderRadius: BorderRadius.circular(8)), child: Center(child: Text(board[i], style: const TextStyle(fontSize: 40)))),
+                );
+              },
+            ),
+          ),
+          ElevatedButton(onPressed: () { setState(() { board = List.filled(9, ''); winner = ''; turn = 'X'; }); }, child: const Text('Restart')),
           const SizedBox(height: 20),
         ],
       ),
@@ -229,100 +238,99 @@ class _GamesScreenState extends State<GamesScreen> {
   }
 }
 
+// FOOD
 class FoodScreen extends StatefulWidget {
   const FoodScreen({super.key});
   @override
   State<FoodScreen> createState() => _FoodScreenState();
 }
 class _FoodScreenState extends State<FoodScreen> {
-  List<Map<String, dynamic>> cart = [];
-  final List<Map<String, dynamic>> foods = [
-    {'name': 'Chicken Biryani', 'price': 199},
-    {'name': 'Dosa', 'price': 60},
-    {'name': 'Meals', 'price': 120},
-    {'name': 'Parotta', 'price': 80},
-    {'name': 'Pizza', 'price': 299},
-    {'name': 'Burger', 'price': 149},
-  ];
+  List<String> cart = [];
+  int total = 0;
   @override
   Widget build(BuildContext context) {
-    int total = 0;
-    for (var item in cart) { total += item['price'] as int; }
     return Scaffold(
-      appBar: AppBar(title: Text('Food Order - Cart: ${cart.length}'), backgroundColor: Colors.orange),
+      appBar: AppBar(title: Text('Food Cart: ${cart.length}'), backgroundColor: Colors.orange),
       body: Column(
         children: [
-          Expanded(child: ListView.builder(itemCount: foods.length, itemBuilder: (c,i) { final f = foods[i]; return ListTile(leading: const Icon(Icons.fastfood, color: Colors.orange, size: 30), title: Text(f['name'] as String), subtitle: Text('Rs ${f['price']}'), trailing: ElevatedButton(onPressed: () => setState(() => cart.add(f)), child: const Text('Add'))); })),
-          Container(padding: const EdgeInsets.all(16), color: Colors.orange.shade100, child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Total: Rs $total', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)), ElevatedButton(onPressed: cart.isEmpty ? null : () { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Order Placed! Total Rs $total - Delivery in 30min!'))); setState(() => cart.clear()); }, child: const Text('Order Now'))])),
+          Expanded(
+            child: ListView(
+              children: [
+                ListTile(title: const Text('Chicken Biryani'), subtitle: const Text('Rs 199'), trailing: ElevatedButton(onPressed: () { setState(() { cart.add('Biryani'); total += 199; }); }, child: const Text('Add'))),
+                ListTile(title: const Text('Dosa'), subtitle: const Text('Rs 60'), trailing: ElevatedButton(onPressed: () { setState(() { cart.add('Dosa'); total += 60; }); }, child: const Text('Add'))),
+                ListTile(title: const Text('Meals'), subtitle: const Text('Rs 120'), trailing: ElevatedButton(onPressed: () { setState(() { cart.add('Meals'); total += 120; }); }, child: const Text('Add'))),
+              ],
+            ),
+          ),
+          Container(padding: const EdgeInsets.all(16), color: Colors.orange.shade100, child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Total: Rs $total', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)), ElevatedButton(onPressed: () { if (cart.isNotEmpty) { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Order Placed Rs $total'))); setState(() { cart.clear(); total = 0; }); } }, child: const Text('Order Now'))])),
         ],
       ),
     );
   }
 }
 
+// SIMPLE SCREENS - NO COMPLEX BRACKETS
 class FashionScreen extends StatelessWidget {
   const FashionScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    final items = [{'name': 'T-Shirt', 'price': 'Rs 399', 'color': Colors.blue}, {'name': 'Jeans', 'price': 'Rs 899', 'color': Colors.indigo}, {'name': 'Shoes', 'price': 'Rs 1299', 'color': Colors.brown}, {'name': 'Watch', 'price': 'Rs 1999', 'color': Colors.grey}, {'name': 'Cap', 'price': 'Rs 199', 'color': Colors.orange}, {'name': 'Jacket', 'price': 'Rs 1499', 'color': Colors.black}];
-    return Scaffold(appBar: AppBar(title: const Text('Fashion Store'), backgroundColor: Colors.pink), body: GridView.builder(padding: const EdgeInsets.all(12), gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.8, crossAxisSpacing: 12, mainAxisSpacing: 12), itemCount: items.length, itemBuilder: (c,i) { final it = items[i]; return Card(child: Column(children: [Expanded(child: Container(color: (it['color'] as Color).withOpacity(0.2), child: Center(child: Icon(Icons.checkroom, size: 60, color: it['color'] as Color)))), Padding(padding: const EdgeInsets.all(8), child: Column(children: [Text(it['name'] as String, style: const TextStyle(fontWeight: FontWeight.bold)), Text(it['price'] as String, style: const TextStyle(color: Colors.pink, fontWeight: FontWeight.bold)), ElevatedButton(onPressed: () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${it['name']} Added to Cart!'))), child: const Text('Buy'))]))])); }));
+    return Scaffold(appBar: AppBar(title: const Text('Fashion Store'), backgroundColor: Colors.pink), body: ListView(children: [ListTile(title: const Text('T-Shirt Rs 399'), trailing: ElevatedButton(onPressed: () { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Added to Cart'))); }, child: const Text('Buy'))), ListTile(title: const Text('Jeans Rs 899'), trailing: ElevatedButton(onPressed: () {}, child: const Text('Buy'))), ListTile(title: const Text('Shoes Rs 1299'), trailing: ElevatedButton(onPressed: () {}, child: const Text('Buy')))]));
   }
 }
+
 class JobsScreen extends StatelessWidget {
   const JobsScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    final jobs = [{'title': 'Delivery Boy', 'company': 'Swiggy', 'salary': 'Rs 15k-20k'}, {'title': 'Sales Executive', 'company': 'Local Shop', 'salary': 'Rs 12k-18k'}, {'title': 'Driver', 'company': 'Auto/Taxi', 'salary': 'Rs 18k-25k'}];
-    return Scaffold(appBar: AppBar(title: const Text('Namma Ooru Jobs'), backgroundColor: Colors.blue), body: ListView.builder(itemCount: jobs.length, itemBuilder: (c,i) { final j = jobs[i]; return Card(margin: const EdgeInsets.all(8), child: ListTile(leading: const CircleAvatar(child: Icon(Icons.work)), title: Text(j['title'] as String), subtitle: Text('${j['company']} - ${j['salary']}'), trailing: ElevatedButton(onPressed: () => ScaffoldMessenger.of(c).showSnackBar(const SnackBar(content: Text('Applied! Company will call you!'))), child: const Text('Apply')))); }));
+    return Scaffold(appBar: AppBar(title: const Text('Jobs'), backgroundColor: Colors.blue), body: ListView(children: [Card(child: ListTile(title: const Text('Delivery Boy'), subtitle: const Text('Swiggy Rs 15k-20k'), trailing: ElevatedButton(onPressed: () { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Applied!'))); }, child: const Text('Apply')))), Card(child: ListTile(title: const Text('Driver'), subtitle: const Text('Rs 18k'), trailing: ElevatedButton(onPressed: () {}, child: const Text('Apply'))))]));
   }
 }
+
 class MoviesScreen extends StatelessWidget {
   const MoviesScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    final movies = ['Leo - Vijay', 'Jailer - Rajini', 'Ponniyin Selvan', 'Varisu', 'Thunivu', 'Love Today'];
-    return Scaffold(appBar: AppBar(title: const Text('Movies & Shows'), backgroundColor: Colors.red), body: ListView.builder(itemCount: movies.length, itemBuilder: (c,i) => Card(child: ListTile(leading: const Icon(Icons.movie, color: Colors.red, size: 40), title: Text(movies[i]), subtitle: const Text('HD - Tamil - 2h 30m'), trailing: IconButton(icon: const Icon(Icons.play_circle_fill, color: Colors.red, size: 40), onPressed: () => ScaffoldMessenger.of(c).showSnackBar(SnackBar(content: Text('Playing ${movies[i]}...')))))));
+    return Scaffold(
+      appBar: AppBar(title: const Text('Movies'), backgroundColor: Colors.red),
+      body: ListView(
+        children: [
+          ListTile(leading: const Icon(Icons.movie, color: Colors.red, size: 40), title: const Text('Leo - Vijay'), subtitle: const Text('HD Tamil'), trailing: IconButton(icon: const Icon(Icons.play_circle_fill, color: Colors.red, size: 40), onPressed: () { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Playing Leo'))); })),
+          ListTile(leading: const Icon(Icons.movie, color: Colors.red, size: 40), title: const Text('Jailer - Rajini'), subtitle: const Text('HD Tamil'), trailing: IconButton(icon: const Icon(Icons.play_circle_fill, color: Colors.red, size: 40), onPressed: () { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Playing Jailer'))); })),
+          ListTile(leading: const Icon(Icons.movie, color: Colors.red, size: 40), title: const Text('Varisu'), subtitle: const Text('HD Tamil'), trailing: IconButton(icon: const Icon(Icons.play_circle_fill, color: Colors.red, size: 40), onPressed: () { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Playing Varisu'))); })),
+        ],
+      ),
+    );
   }
 }
-class TravelScreen extends StatefulWidget {
+
+class TravelScreen extends StatelessWidget {
   const TravelScreen({super.key});
   @override
-  State<TravelScreen> createState() => _TravelScreenState();
-}
-class _TravelScreenState extends State<TravelScreen> {
-  String from = 'Coimbatore';
-  String to = 'Chennai';
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: const Text('Travel Booking'), backgroundColor: Colors.teal), body: Padding(padding: const EdgeInsets.all(16), child: Column(children: [DropdownButtonFormField(value: from, items: ['Coimbatore','Podanur','Tirupur','Salem'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => setState(() => from = v!), decoration: const InputDecoration(labelText: 'From', border: OutlineInputBorder())), const SizedBox(height: 16), DropdownButtonFormField(value: to, items: ['Chennai','Bangalore','Madurai','Trichy'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => setState(() => to = v!), decoration: const InputDecoration(labelText: 'To', border: OutlineInputBorder())), const SizedBox(height: 20), Card(child: Padding(padding: const EdgeInsets.all(12), child: Column(children: [ListTile(leading: const Icon(Icons.directions_bus, color: Colors.teal), title: Text('$from to $to'), subtitle: const Text('Govt Bus - 6:00 AM - Rs 350'), trailing: ElevatedButton(onPressed: () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Bus Booked! $from to $to'))), child: const Text('Book')))])))])));
+    return Scaffold(appBar: AppBar(title: const Text('Travel'), backgroundColor: Colors.teal), body: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [const Text('Coimbatore to Chennai'), const SizedBox(height: 10), ElevatedButton(onPressed: () { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Bus Booked'))); }, child: const Text('Book Bus Rs 350'))])));
   }
 }
+
 class BooksScreen extends StatelessWidget {
   const BooksScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    final books = ['Tamil Stories', 'GK for TNPSC', 'Computer Basics', 'English Speaking', 'Business Ideas', 'Farmer Guide'];
-    return Scaffold(appBar: AppBar(title: const Text('Books & Education'), backgroundColor: Colors.brown), body: ListView.builder(itemCount: books.length, itemBuilder: (c,i) => Card(child: ListTile(leading: const Icon(Icons.menu_book, color: Colors.brown, size: 40), title: Text(books[i]), subtitle: const Text('Free - Read Offline'), trailing: ElevatedButton(onPressed: () => ScaffoldMessenger.of(c).showSnackBar(SnackBar(content: Text('Opening ${books[i]}...'))), child: const Text('Read'))))));
+    return Scaffold(appBar: AppBar(title: const Text('Books'), backgroundColor: Colors.brown), body: ListView(children: [ListTile(title: const Text('Tamil Stories'), trailing: ElevatedButton(onPressed: () {}, child: const Text('Read'))), ListTile(title: const Text('GK for TNPSC'), trailing: ElevatedButton(onPressed: () {}, child: const Text('Read')))]));
   }
 }
+
 class NewsScreen extends StatelessWidget {
   const NewsScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    final news = [{'title': 'Coimbatore la heavy rain', 'time': '2h ago'}, {'title': 'Podanur la new shop open', 'time': '5h ago'}, {'title': 'Tamil Nadu Jobs 2026', 'time': '1d ago'}];
-    return Scaffold(appBar: AppBar(title: const Text('Namma Ooru News'), backgroundColor: Colors.indigo), body: ListView.builder(itemCount: news.length, itemBuilder: (c,i) { final n = news[i]; return Card(child: ListTile(leading: const Icon(Icons.newspaper, color: Colors.indigo), title: Text(n['title'] as String), subtitle: Text(n['time'] as String), onTap: () => ScaffoldMessenger.of(c).showSnackBar(SnackBar(content: Text(n['title'] as String))))); }));
+    return Scaffold(appBar: AppBar(title: const Text('News'), backgroundColor: Colors.indigo), body: ListView(children: [Card(child: ListTile(title: const Text('Coimbatore la heavy rain'), subtitle: const Text('2h ago'))), Card(child: ListTile(title: const Text('Podanur new shop open'), subtitle: const Text('5h ago')))]));
   }
 }
-class RechargeScreen extends StatefulWidget {
+
+class RechargeScreen extends StatelessWidget {
   const RechargeScreen({super.key});
   @override
-  State<RechargeScreen> createState() => _RechargeScreenState();
-}
-class _RechargeScreenState extends State<RechargeScreen> {
-  final _phone = TextEditingController();
-  String _operator = 'Jio';
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: const Text('Recharge'), backgroundColor: Colors.green), body: Padding(padding: const EdgeInsets.all(16), child: Column(children: [TextField(controller: _phone, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: 'Mobile Number', border: OutlineInputBorder(), prefixText: '+91 ')), const SizedBox(height: 16), DropdownButtonFormField(value: _operator, items: ['Jio','Airtel','Vi','BSNL'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => setState(() => _operator = v!), decoration: const InputDecoration(labelText: 'Operator', border: OutlineInputBorder())), const SizedBox(height: 20), SizedBox(width: double.infinity, child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.green, padding: const EdgeInsets.all(16)), onPressed: () { if (_phone.text.length == 10) { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Recharge Success! Rs 199 to ${_phone.text} ($_operator)'))); } else { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Enter 10 digit number'))); } }, child: const Text('Recharge Now', style: TextStyle(fontSize: 18, color: Colors.white))))])));
+    return Scaffold(appBar: AppBar(title: const Text('Recharge'), backgroundColor: Colors.green), body: Padding(padding: const EdgeInsets.all(16), child: Column(children: [TextField(decoration: const InputDecoration(labelText: 'Mobile Number', border: OutlineInputBorder(), prefixText: '+91 '), keyboardType: TextInputType.phone), const SizedBox(height: 20), SizedBox(width: double.infinity, child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.green), onPressed: () { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Recharge Success'))); }, child: const Text('Recharge Now', style: TextStyle(color: Colors.white))))])));
   }
 }
