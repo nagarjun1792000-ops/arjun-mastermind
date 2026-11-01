@@ -1,17 +1,27 @@
 name: arjun_mastermind
-description: Arjun Mastermind - Namma Ooru All-in-One Super App
+description: Namma Ooru Super App - All in One
 publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.6
+  cupertino_icons: ^1.0.2
   google_mobile_ads: ^3.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
   flutter_launcher_icons: ^0.13.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/logo_final.png
 
 flutter_launcher_icons:
   android: "launcher_icon"
@@ -20,14 +30,3 @@ flutter_launcher_icons:
   min_sdk_android: 21
   web:
     generate: false
-
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^3.0.0
-
-flutter:
-  uses-material-design: true
-  assets:
-    - assets/
-    - assets/logo_final.png
