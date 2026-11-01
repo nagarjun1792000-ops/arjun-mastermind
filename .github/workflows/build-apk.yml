@@ -21,43 +21,53 @@ jobs:
           flutter-version: '3.19.0'
           channel: 'stable'
       
-      - name: Create Android folder if missing
+      - name: Fix Android folder and Manifest
         run: |
+          # Manifest odanja iruntha android folder ah delete panni pudhusa create pannum
+          MANIFEST="android/app/src/main/AndroidManifest.xml"
+          if [ -f "$MANIFEST" ]; then
+            if ! python3 -m xml.dom.minidom "$MANIFEST" > /dev/null 2>&1; then
+              echo "Manifest broken! Recreating..."
+              rm -rf android
+            fi
+          fi
           if [ ! -d "android" ]; then
             flutter create . --platforms=android --project-name arjun_mastermind
           fi
+          # AdMob ID ah correct ah insert pannum python la
+          python3 << 'PY'
+          import pathlib
+          path = pathlib.Path("android/app/src/main/AndroidManifest.xml")
+          text = path.read_text()
+          if "com.google.android.gms.ads.APPLICATION_ID" not in text:
+              text = text.replace("</application>", '        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3940256099942544~3347511713"/>\n        </application>')
+              path.write_text(text)
+              print("AdMob ID added safely")
+          else:
+              print("AdMob ID already exists")
+          PY
+          cat "$MANIFEST"
       
-      - name: Ensure assets folder and logo exists
+      - name: Ensure assets folder exists
         run: |
           mkdir -p assets
-          if [ ! -f "assets/logo_final.png" ]; then
-            echo "Logo missing - using default icon for now"
-            # Create a simple placeholder if missing
-            ls -la assets/
-          else
-            echo "Logo found!"
+          if [ -f "assets/logo_final.png" ]; then
+            echo "Logo exists - OK"
             ls -lh assets/logo_final.png
-          fi
-      
-      - name: Add AdMob App ID to AndroidManifest
-        run: |
-          MANIFEST="android/app/src/main/AndroidManifest.xml"
-          if [ -f "$MANIFEST" ]; then
-            if ! grep -q "com.google.android.gms.ads.APPLICATION_ID" "$MANIFEST"; then
-              sed -i '/<application/a \        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3940256099942544~3347511713"\/>' "$MANIFEST"
-            fi
+          else
+            echo "Logo missing - will use default icon"
           fi
       
       - name: Get dependencies
         run: flutter pub get
       
-      - name: Generate App Icon from your photo
+      - name: Generate App Icon
         continue-on-error: true
         run: |
           if [ -f "assets/logo_final.png" ]; then
-            flutter pub run flutter_launcher_icons
+            flutter pub run flutter_launcher_icons || echo "Icon generation skipped"
           else
-            echo "Skipping icon generation - logo not found, using default"
+            echo "No logo, skipping icon generation"
           fi
       
       - name: Build APK
@@ -66,5 +76,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: namma-ooru-app-with-ads
+          name: namma-ooru-app-final
           path: build/app/outputs/flutter-apk/app-release.apk
